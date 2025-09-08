@@ -1,5 +1,6 @@
+//!function(){
 "use strict"
-var w=window,d=document,n=null,gLog=console.log.bind(console),u
+var w=window,d=document,n=null,u
 
 var gCardTypeIcons = ['😊','💩','💡','🎁']
 
@@ -86,9 +87,9 @@ var gAppVersion=1,
 Guru|30|🧘|🧵3🙏3✌1🤐2☯2🥗2🛕1|The energy crystals harness the moon energy. That is why you are lucky.
 Model|30|💃|😈1👒1💋1🍑1🖕1🔞1👀1🍈1👅1🎊1👙1|Do you like the view? Pics in bio!
 Hipster|30|🧔|🤐1🦉2🐕1🍆2💪2🍺2🥱2✌1|I liked craft beer before it was cool.
-Karen|30|👩|🤬2🤮2👒1🍸2🥗2|Corner Cafe's avocados aren't organic! That should be illegal. And why do cafes keep shutting down?
-Creep|30|👨‍🦲|🤮1💦4🚽1👀2🍆3👅2😈3|hi mama cum over to my place
-Regard|30|🧒|🚀2🦍2🐻3🐂1📈2🚽1🍔1🎰2|To the moon!
+Karen|30|👩|🤮2🤬2👒1🍸2🥗2|Corner Cafe's avocados aren't organic! That should be illegal. And why do cafes keep shutting down?
+Creep|30|👨‍🦲|🤮1🍆3💦4🚽2👀2👅2😈3|hi mama will u cum to my place
+Regard|30|🧒|🚀2🦍2🐻3🐂1📈2🚽1🍔1🎰2|To the moon! 🚀
 Elon|224|👱|🍆1💦1💯2🚀2😂2🚗2🤰1📡1|secret elon text here.
 GotJunk||🛠||<b>Too Much Junk?</b> Expert junk emoji removal service. Any emoji, one low price!
 Cutest||😻||<b>Sale!</b> ♥CUTE♥ emojis on sale! Lowest price guaranteed. Today only.
@@ -114,7 +115,7 @@ Cool2Hate||👹||<b>Sale!</b> HATE emojis on sale! Lowest price guaranteed. Toda
 		{d:"🐻1Bear|👎13\n👎3 to u", block:13, onUse:_=>gGuyVotesAdd(-3, gGuyNow.other)},
 		{d:"🐂0Bull|👍13\n👍3 to enemy", attack:13, onUse:_=>gGuyVotesAdd(3, gGuyNow.other)},
 		{d:"🙏2Pray|Enemy loses all 🗣\n👤+1", onUse:_=>{gGuyShoutAdd(gGuyNow.other,-gGuyNow.other.shout);gGuyFanGain(gGuyNow)}},
-		{d:"💯2100%|2x ur 👍\n2x enemy 👎\nsend ur post now", block:_=>Math.min(0, gGuyNow.other.votes), attack:_=>Math.max(0, gGuyNow.votes)},
+		{d:"💯2100%|2x ur 👍\n2x enemy 👎\nsend ur post now", block:_=>Math.max(0, -gGuyNow.other.votes), attack:_=>Math.max(0, gGuyNow.votes)},
 		{d:"☯ 1Yin Yang|👎 equal to ur post's 👍👎\ndiscard 1", block:_=>Math.abs(gGuyNow.votes), discard: 1},
 		{d:"🍸0Cocktail|👍5\n😎+3 if u have none, 😎-6 if u do", attack:5, onUse:card=>card.cool=gGuyNow.cool>0?-6:3},
 		{d:"🚗0Car|👍7\n💬+1 if u have more fans",attack:7,energy:_=>gGuyNow.fans>gGuyNow.other.fans?1:0},
@@ -125,14 +126,15 @@ Cool2Hate||👹||<b>Sale!</b> HATE emojis on sale! Lowest price guaranteed. Toda
 		{d:"🍈0Melons|👍20", cost:2, attack:20},
 		{d:"💄2Lipstick|😎+3", cool:3},
 		{d:"👅0Tongue|👍10 if enemy post is positive", attack:_=>gGuyNow.other.votes > 0 ? 10:0},
+		{d:"🎊0Confetti|👍20 to everyone!", attack:20, block:-20},
+		{d:"🍆1Eggplant|👎9", block:9},
 		{d:"👙0Bikini|👍20\nenemy gets 🗣+3",attack:15, onUse:_=>gGuyShoutAdd(gGuyNow.other,3)},
 		{d:"🚨2Siren|draw 2\n🗣+2", shout:1, draw:2},
-		{d:"💦1Droplets|👎x2 the amount of 👎 ur previous emoji did", block:_=>gPostingCard0 ? gPostingCard0.block*2: 0},
-		{d:"🍑0Peach|👍x2 the amount of 👎 ur previous emoji did", attack:_=>gPostingCard0 ? gPostingCard0.block*2: 0},
-		{d:"🔫1Pistol|👎x2 the amount of 👍 ur previous emoji did", block:_=>gPostingCard0 ? gPostingCard0.attack*2: 0},
+		{d:"💦1Droplets|👎x2 the amount of 👎 ur previous emoji did", block:_=>gPostingCard0 ? Math.max(0,gPostingCard0.block*2): 0},
+		{d:"🍑0Peach|👍x2 the amount of 👎 ur previous emoji did", attack:_=>gPostingCard0 ? Math.max(0,gPostingCard0.block*2): 0},
+		{d:"🔫1Pistol|👎x2 the amount of 👍 ur previous emoji did", block:_=>gPostingCard0 ? Math.max(0,gPostingCard0.attack*2): 0},
 		{d:"🤡1Clown|👎 half ur enemy's 👍", block:_=>gGuyNow.other.votes>0?gGuyNow.other.votes>>1:0},
 		{d:"🚽3Toilet|👎1 every time u use an emoji"},
-		{d:"🎊0Confetti|👍20 to everyone!", attack:20, block:-20},
 		{d:"🤢1Nausea|👎for each emoji in ur trash", block:_=>gGuyNow.trash.length},
 		{d:"🤐1Zippermouth|👎11 send ur post now", block:10},
 		{d:"🤬1Face With Symbols|👎5\n🗣+2", block:5, shout:2},
@@ -142,7 +144,6 @@ Cool2Hate||👹||<b>Sale!</b> HATE emojis on sale! Lowest price guaranteed. Toda
 		{d:"🏡3House With Garden|💬+1 on each post"},
 		{d:"💤1Zzz|👎3\nDraw 3 if u lose fans", block:3},
 		{d:"🧠3Brain|draw 1 extra each time ur turn starts"},
-		{d:"🍆1Eggplant|👎9", block:9},
 		{d:"😈0Smiling Devil|👍5\n👎5", attack:5, block:5},
 		{d:"🥱1Yawn|👎4 💬+1", block:4, energy:1},
 		{d:"🍺0Beer|👍8\n🗣+1\ndiscard 1", attack:8, shout:1, discard:1},
@@ -217,7 +218,7 @@ var gStateStateSet = state => {
 }
 
 var gStateSet = state => {
-	gLog("gStateSet()",gState,state)
+	console.log("gStateSet()",gState,state)
 	if(gState != state) {
 		gStateOld = gState
 	}
@@ -330,6 +331,14 @@ var gStateSet = state => {
 		}
 	}
 	
+	if(gOr(state, gStateFeedLoad, gStateFeed) || gState == gStateDeckView) {
+		gKeyboardHeightSet(20)
+		for(var card of gYou.deck) {
+			gCardFlipDown(card)
+		}
+		gHandRender()
+	}
+
 	gState = state
 	gStateState = 0
 	
@@ -356,27 +365,22 @@ var gStateSet = state => {
 		gButtonShow(0, 'Leave', 22, gFeedGo)
 	}
 
-	if(gOr(state, gStateFeedLoad, gStateFeed)) {
-		gKeyboardHeightSet(20)
-		for(var card of gYou.deck) {
-			gCardFlipDown(card)
-		}
-		gHandRender()
-	}
-
 	if(state == gStateFeedLoad) {
 		gDivBottomSet(gRivalDiv)
-		gDayAdd()
+		if(gStateOld!=gStateDeckView)gDayAdd()
 		gBubblesDiv.innerHTML = ''
 		gBubbleDivAdd(`<div style='font-size:3rem;background:#ABF;border-radius:99rem;color:#000;padding:1rem 3rem;margin:2rem auto;display:inline-block'>August ${gDay}, 2025</div>`)
 
 		gButtonShow(0, 'View Your Feed', 66, _=>{
 			gDelay(_=> {
-				for(var i=0; i<(gDay>1?3:2); i++) {
-					var rivalKind = gRivalKinds.at(i==2 ? -gRandomInt(1,3) : Math.min(6, gRandomInt(1,3)*i+(gDay-1)/2|0))
-					rivalKind.fans += gDay<13?gDay*gRandomInt(1,2):0
+				var high = gDay>1&&gDay<13 ? 2:1
+				var specialI = gDay>12 ? 1:2
+				for(var rivalI=0; rivalI<=high; rivalI++) {
+					var rivalKind = gRivalKinds.at(rivalI==specialI ? -gRandomInt(1,3) : Math.min(6, gRandomInt(1,3)*rivalI+(gDay-1)/2|0))
+					rivalKind.fans += rivalKind.fans && gDay*gRandomInt(4,7)
+					if(gDay>12 && !rivalI)rivalKind = gRivalKinds[7]
 					gBubbleMake(1, rivalKind.post, u, rivalKind)
-					if(i==2) {
+					if(rivalI==specialI) {
 						gRival = gGuyMake(rivalKind)
 						if(gOfferDid) {
 							gBubbleDivAdd("<div style='font-size:3rem;color:#3D3;position:relative;top:-5rem'>Purchased!</div>")
@@ -451,50 +455,37 @@ var gGuyFansSet = (guy,fans) => {
 					}, 5)
 					gDelay(_=> guy!=gYou ? gBubbleMake(0,"justice is served!",1): (gBubbleMake(1,"hahaha!",1),gBubbleDivAdd("<div style='height:24rem'></div>",'grow33')), 9)
 					if(guy==gYou) {
-						//gStateSet(gStateGameOver)
-						gBattleIn = 0
-						gTrashClear(guy)
-						gHandRender()
-						gPostingRender()
-						gTrashRender()
-						
-						var text = `I was cancelled by a ${gRival.kind.name} on August ${gDay}! They posted `+(gRival.posting.map(card=>card.kind.emoji).join(''))
-						gKeyboardDiv.innerHTML = `
-							<div style='font-size:6rem;padding-top:22rem'>Game Over</div>
-							<div style='font-size:4rem'>Score: 🏆${gDay*10+gGold}</div>
-							<textarea style='width:50rem;height:15rem;font-size:3rem;margin:2rem'>${text}</textarea>
-						`
-						gButtonShow(0, "Copy to share", 22, _=>{
-							navigator.clipboard.writeText(text)
-							gButtonShow(0, "✔", 22, _=>{})
-						})
+						gBattleCleanup()
+						gGameOverShow()
 					} else {
 						gDelay(_=> {
 							gSoundPlay(gWinSound)
-							gBattleIn = 0
-							gYou.shout = gYou.cool = 0
-							gTrashClear(gYou)
-							gHandRender()
-							gPostingRender()
-							gYou.items = []
-							gItemsRender(gYou)
-							
-							var total = 3
-							var margin = 2
-							for(var i=0; i<total; i++) {
-								var card = gRival.deck.pop() || gRival.trash.pop()
-								card = gCardMake(card.kind)
-								card.state = gCardStatePrize
-								card.div.querySelector('.cardFront').classList.add('glow')
-								gDivBottomSet(card, 37, (50-gCardRem/2)+(i-(total-1)/2)*(gCardRem+margin))
-								gCardFlipUp(card)
-								gPrizeCards.push(card)
+							gBattleCleanup()
+
+							if(gDay>12) {
+								gGameOverShow(1)
+							} else {
+								gYou.shout = gYou.cool = 0
+								gYou.items = []
+								gItemsRender(gYou)
+								
+								var total = 3
+								var margin = 2
+								for(var i=0; i<total; i++) {
+									var card = gRival.deck.pop() || gRival.trash.pop()
+									card = gCardMake(card.kind)
+									card.state = gCardStatePrize
+									card.div.querySelector('.cardFront').classList.add('glow')
+									gDivBottomSet(card, 37, (50-gCardRem/2)+(i-(total-1)/2)*(gCardRem+margin))
+									gCardFlipUp(card)
+									gPrizeCards.push(card)
+								}
+								gDivBottomSet(gMessageDiv, 72)
+								gMessageDiv.innerHTML = `<div style='margin-bottom:2rem'>Your fans donated $6 to you!</div>You can take an emoji:`
+								gButtonShow(0, 'No Thanks', 22, gPrizeDone)
+								
+								gGoldAdd(6)
 							}
-							gDivBottomSet(gMessageDiv, 72)
-							gMessageDiv.innerHTML = `<div style='margin-bottom:2rem'>Your fans donated $6 to you!</div>You can take an emoji:`
-							gButtonShow(0, 'No Thanks', 22, gPrizeDone)
-							
-							gGoldAdd(6)
 						}, 15)
 					}
 				}, 11)
@@ -506,6 +497,31 @@ var gGuyFansSet = (guy,fans) => {
 	if(guy==gYou) {
 		gHpDiv.innerHTML = guy.fans
 	}
+}
+
+var gGameOverShow = win => {
+	var post = (win?gYou:gRival).posting.map(card=>card.kind.emoji).join('')
+	var text = win ? 
+		"I cancelled Elon with this post: "+post
+		:
+		`I was cancelled by a ${gRival.kind.name} on August ${gDay}! They posted `+post
+	gKeyboardDiv.innerHTML = `
+		<div style='font-size:6rem;padding-top:22rem'>${win?'YOU SAVED THE INTERNET!':'Game Over'}</div>
+		<div style='font-size:4rem'>Score: 🏆${gDay*10+gGold}</div>
+		<textarea style='width:50rem;height:15rem;font-size:3rem;margin:2rem'>${text}</textarea>
+	`
+	gButtonShow(0, "Copy to share", 22, _=>{
+		navigator.clipboard.writeText(text)
+		gButtonShow(0, "✔", 22, _=>{})
+	})
+}
+
+var gBattleCleanup = _=> {
+	gBattleIn = 0
+	gTrashClear(gYou)
+	gHandRender()
+	gPostingRender()
+	gTrashRender()
 }
 
 var gDivFadeOutDelete = div => {
@@ -596,7 +612,7 @@ var gBattleStart = rivalKind => {
 
 var gRoundStart = _ => {
 	if(gBattleIn>1)return
-	gLog("gRoundStart()", gRound)
+	console.log("gRoundStart()", gRound)
 	/*
 	if(gBattleFans<1) {
 		gBubbleDivAdd(`<div style='height:33rem'></div>`, 'grow33')
@@ -623,7 +639,7 @@ var gRoundStart = _ => {
 }
 
 var gTurnStart = guy => {
-	gLog("gTurnStart()", gRound, guy==gYou)
+	console.log("gTurnStart()", gRound, guy==gYou)
 	gGuyNow = guy
 	
 	gPostingCard0 = u
@@ -701,35 +717,36 @@ var gSend = _=>{
 			gGuyFansSet(gYou, votes)
 			gDraw(3*gGuyPostTotalGet('💤', gYou), gYou)
 		}
-		if(votes2 < 0) {
-			gGuyFansSet(gRival, votes2)
-			gDraw(3*gGuyPostTotalGet('💤', gRival), gRival)
-		}
-		
-		if((votes > 0 || votes2 > 0) && votes != votes2) {
-			gGuyFanGain(votes > votes2 ? gYou:gRival)
-		}
-		
-		gDelay(_=>{
-			gRoundStart()
-		}, 7 + (votes>0 || votes2>0)*6)
-
-		for(var guy of guys) {
-			for(var card of guy.posting) {
-				if(card.kind.type == 3) {
-					card.state = gCardStateItemUsed
-				} else {
-					gCardTrashGo(card)
-					if(card.kind.emoji == '☮') {
-						gArrayRemove(guy.trash, card)
-						card.guy = u
-						gDivFadeOutDelete(card)
+		if(gBattleIn<2) {
+			if(votes2 < 0) {
+				gGuyFansSet(gRival, votes2)
+				gDraw(3*gGuyPostTotalGet('💤', gRival), gRival)
+			}
+			
+			if((votes > 0 || votes2 > 0) && votes != votes2) {
+				gGuyFanGain(votes > votes2 ? gYou:gRival)
+			}
+			
+			gDelay(_=>{
+				gRoundStart()
+			}, 7 + (votes>0 || votes2>0)*6)
+	
+			for(var guy of guys) {
+				for(var card of guy.posting) {
+					if(card.kind.type == 3) {
+						card.state = gCardStateItemUsed
+					} else {
+						gCardTrashGo(card)
+						if(card.kind.emoji == '☮') {
+							gArrayRemove(guy.trash, card)
+							card.guy = u
+							gDivFadeOutDelete(card)
+						}
 					}
 				}
 			}
+			gTrashRender()
 		}
-		gTrashRender()
-		
 	}, 10)
 }
 
@@ -767,7 +784,7 @@ var gDraw = (total,guy) => {
 	if(gBattleIn>1)return
 	if(total) {
 		if(!guy)guy = gGuyNow
-		gLog("gDraw()", total)
+		console.log("gDraw()", total)
 		if(total>1) {
 			for(var i=0; i<total; i++) {
 				if(guy == gYou) {
@@ -824,7 +841,7 @@ var gRandomInt = (lo, hi) => Math.random()*(hi-lo+1)+lo|0
 
 var gCardHandAdd = (card, guy) => {
 	if(!guy)guy = gGuyNow
-	gLog("gCardHandAdd()", card.kind.name)
+	console.log("gCardHandAdd()", card.kind.name)
 	card.state = gCardStateDraw
 	card.handI = 0
 	while(1) {
@@ -838,13 +855,13 @@ var gCardHandAdd = (card, guy) => {
 }
 
 var gCardFlipUp = card => {
-	//gLog("gCardFlipUp()", card.kind.name)
+	//console.log("gCardFlipUp()", card.kind.name)
 	card.div.classList.add('faceUp')
 	card.div.style.fontSize = gCardRem+'rem'
 }
 
 var gCardFlipDown = card => {
-	//gLog("gCardFlipDown()", card.kind.name)
+	//console.log("gCardFlipDown()", card.kind.name)
 	card.div.classList.remove('faceUp')
 	card.div.style.fontSize = gCardRem*.4+'rem'
 }
@@ -1020,7 +1037,7 @@ var gPush = (list, item, errorIgnore) => {
 }
 
 var gCardUseTry = card=>{
-	gLog("gCardUseTry()", card.kind.name, card.state)
+	console.log("gCardUseTry()", card.kind.name, card.state)
 	
 	if(card.state == gCardStatePrize) {
 		gPrizeDone(card)
@@ -1055,7 +1072,7 @@ var gCardUseTry = card=>{
 		return
 	}
 	
-	if(gOr(gState,gStateFeed,gStateFeedLoad,gStateLose)) {
+	if(gOr(gState,gStateFeed,gStateFeedLoad,gStateLose,gStateWin)) {
 		if(gYou.deck.includes(card)) {
 			gStateSet(gStateDeckView)
 			gSoundPlay(gClickSound)
@@ -1183,19 +1200,20 @@ var gGuyVotesAdd = (votes, guy) => {
 var gCardUsePostAdd = card => {
 	
 	var block = gCardBlockNowGet(card)
-	if(block) {
-		gGuyVotesAdd(-block, gGuyNow.other)
-	}
-	
 	var attack = gCardAttackNowGet(card)
-	if(attack) {
-		gGuyVotesAdd(attack)
-	}
-
 	if(gPostingCard0 && gPostingCard0.kind.emoji=='🔊') {
 		attack *= 2
 		block *= 2
 	}
+	
+	if(block) {
+		gGuyVotesAdd(-block, gGuyNow.other)
+	}
+	
+	if(attack) {
+		gGuyVotesAdd(attack)
+	}
+
 
 	card.attack = attack
 	card.block = block
@@ -1408,17 +1426,13 @@ var gDeckShow = _=>{
 			var y = 100-(i/4|0)*addY
 			gDivBottomSet(card, y, x)
 			i++
-			gDelay(gCardFlipUp.bind(n,card), 3 + i*(gState==gStateIntro?1:.1))
+			gDelay(gCardFlipUp.bind(n,card), 3 + i*.1)
 		}
 		gSoundPlay(gPackOpenSound)
 		gDelay(_=>{
-			gButtonShow(0, gState!=gStateCardRemove?'Okay':'Cancel', 10, _=>{
-				if(gState == gStateIntro) {
-					gStateSet(gStateFeedLoad)
-				} else {
-					gStateSet(gStateOld)
-				}
-			})
+			gButtonShow(0, gState!=gStateCardRemove?'Okay':'Cancel', 10, _=>
+				gStateSet(gState == gStateIntro ? gStateFeedLoad : gStateOld)
+			)
 		}, 9)
 	}, 2)
 }
@@ -1621,7 +1635,7 @@ var gResize = _=>{
 
 w.onresize = gResize
 
-var gMousePan=.5
+//var gMousePan=.5
 w.onload = _=>{
 	d.body.innerHTML = `
 <div class=phoneButton><div></div><div style='margin-top:22px'></div></div>
@@ -1682,16 +1696,15 @@ w.onload = _=>{
 	<div id=gTrashDiv style='cursor:pointer;position:absolute;z-index:3;background-size:cover;width:1.2em;height:1.3em;left:20rem;font-size:12rem' class=emoji>🗑</div>
 	<div id=gBattleFansDiv style='position:absolute;z-index:2;left:2rem;font-size:6rem;background:#ABF;border-radius:9rem;padding:1rem 2rem;line-height:1;box-shadow:.3rem .5rem .5rem #888'></div>
 	<div id=gFanAddDiv></div>
-	<div id=gCardsDiv>
-	</div>
+	<div id=gCardsDiv></div>
 	<div id=gMessageDiv style='font-size:3rem;position:absolute;z-index:4;left:0;right:0;pointer-events:none'></div>
 	<div id=gCancelDiv><div style='transform:scaleY(1.5)'>CANCELLED</div></div>
 	<div id=gOverlayDiv></div>
-	<div id=gHelpDiv style='font-weight:normal;border-radius:4rem;z-index:2000;position:absolute;inset:2rem;top:16rem;box-shadow:0 0 1rem #000;background:#FFF;color:#000;overflow:auto;display:none;padding:3rem'>
+	<div id=gHelpDiv style='font-size:4rem;font-weight:normal;border-radius:4rem;z-index:2000;position:absolute;inset:2rem;top:16rem;box-shadow:0 0 1rem #000;background:#FFF;color:#000;overflow:auto;display:none;padding:3rem'>
 		<div style='font-size:7rem'>Tips</div>
 		<div style='font-size:4rem;text-align:left'>
 			u need to downvote your enemy's post so they lose all their fans and get cancelled. if ur post is negative, u will lose that many fans. It's hard to gain fans so first make sure ur post is positive.
-			When it's already positive it doesn't help to get higher votes, except that the highest voted post gets +1 fan.
+			When ur post is already positive, it doesn't help to upvote it even more, except that the highest voted post gets +1 fan.
 		</div>
 		<div style='font-size:7rem;margin-top:5rem'>Icon Info</div>
 		<div style='font-size:4rem;text-align:left'>
@@ -1708,7 +1721,7 @@ w.onload = _=>{
 			🎁 ITEM: Adds an effect that stays with u the rest of the battle. The item card can't be used again this battle.
 		</div>
 		<div style='font-size:7rem;margin-top:5rem'>Emojidex</div>
-		<div style='font-size:4rem;text-align:left' id=gHelpCardsDiv>
+		<div id=gHelpCardsDiv>
 		</div>
 	</div>
 	<div id=gHandPickDiv></div>
@@ -1765,7 +1778,7 @@ header button{box-shadow:0 .3rem .2rem inset #FFF, #333 0px -.3rem .2rem inset;b
 .discardState #gOverlayDiv{bottom:70.6rem}
 #gHandPickDiv{animation:notice 1s infinite;z-index:2222;position:absolute;bottom:-9rem;left:50%;transform:translateX(-50%);font-size:3rem;background:#ABF;padding:0.1rem 2rem;border-radius:2rem}
 .discardState #gHandPickDiv{bottom:1rem}
-#gTrashViewDiv{border-radius:4rem;z-index:2000;position:absolute;top:60%;left:2rem;right:2rem;bottom:40%;box-shadow:0 0 1rem #000;background:#555;color:#FFF;transition:all .3s ease;overflow:hidden;opacity:0}
+#gTrashViewDiv{border-radius:4rem;z-index:2000;position:absolute;top:60%;left:2rem;right:2rem;bottom:41%;box-shadow:0 0 1rem #000;background:#555;color:#FFF;transition:all .3s ease;overflow:hidden;opacity:0}
 .trashState #gTrashViewDiv{opacity:1;top:2rem;bottom:2rem}
 #gFanAddDiv{transition:all .6s ease-in;position:absolute;z-index:2;left:2rem;font-size:5rem;left:3rem}
 
@@ -1783,7 +1796,7 @@ header button{box-shadow:0 .3rem .2rem inset #FFF, #333 0px -.3rem .2rem inset;b
 .posted .bubbleArrow{background:#9E9}
 .handBlank{background-color:#CCC;border-radius:.05em;background-size:cover;width:1em;height:1.43em;position:absolute;z-index:3}
 .emoji{font-family:segoe ui emoji}
-#gGoldDiv,#gDayDiv,#gHpDiv{background:#EEC;color:#222;border-radius:9em;border:1px solid #888;font-size:5rem;width:18rem;height:8rem;padding:.7rem 0 0 2rem}
+#gGoldDiv,#gDayDiv,#gHpDiv{background:#EEC;color:#222;border-radius:9em;border:1px solid #888;font-size:5rem;width:18rem;height:8rem;padding:1rem 0 0 2rem}
 
 @keyframes load {
 	0%, 100% {opacity:1}
@@ -1849,8 +1862,8 @@ var gOnLoad = _ => {
 		if(e.changedTouches) {
 			e = e.changedTouches[0]
 		}
-		var bounds = gGameDiv.getBoundingClientRect()
-		gMousePan = gClamp((e.clientX-bounds.x)/bounds.width,0,1)
+		//var bounds = gGameDiv.getBoundingClientRect()
+		//gMousePan = gClamp((e.clientX-bounds.x)/bounds.width,0,1)
 		//gMouseX = e.clientX-bounds.x
 		//gMouseY = e.clientY-bounds.y
 		
@@ -1858,7 +1871,7 @@ var gOnLoad = _ => {
 		
 		if(target == gBubblesDiv) {
 			gBubblesDiv.parentNode.style.pointerEvents = 'none'
-			target = d.elementFromPoint(e.pageX, e.pageY)
+			target = d.elementFromPoint(e.clientX, e.clientY)
 			gBubblesDiv.parentNode.style.pointerEvents = 'all'
 		}
 		if(target) {
@@ -1936,10 +1949,10 @@ var gOnLoad = _ => {
 			var rowStyle = gTextIf(!gYou.deck.find(card=>card.kind==kind), ` style='filter:grayscale(1);color:#888'`)
 			html += `
 				<tr${rowStyle}>
-					<td style='letter-spacing:-2rem;padding-right:2rem;white-space:nowrap;text-align:center' class=emoji>${emoji}</td>
-					<td>${kind.name}</td>
-					<td>${text}</td>
-					<td align=center>${gCardTypeIcons[kind.type]}</td>
+					<td style='letter-spacing:-2rem;padding-right:2rem;white-space:nowrap' class=emoji>${emoji} </td>
+					<td align=left>${kind.name}</td>
+					<td align=left>${text}</td>
+					<td>${gCardTypeIcons[kind.type]}</td>
 				</tr>
 			`
 		}
@@ -2134,3 +2147,4 @@ gSoundMake(i => {
 	return gSin(i/2e3 - gSin(i/331)*gSin(i/61) + gSin(gSin(i/59)/39) * 33)*t(i,n)
 })
 */
+//}()
