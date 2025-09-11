@@ -84,15 +84,16 @@ var gAppVersion=1,
 	gHandMax=8,
 	gEnergyStart=3,
 	gSale=' emojis on sale! Lowest price guaranteed. Today only.',
-	gRivalInfos=`Boomer|30|👴|🤬3🏡1🏈2🔫1✝2🔊1🗽2💤4🏡1💤3|I bought my first house for 7 raspberries. The kids today are just lazy. Time for my nap.
-Guru|30|🧘|🧵3🙏3✌1🤐2☯2🥗2🛕1|The energy crystals harness the moon energy. That is why you are lucky.
-Model|30|💃|😈1👒1💋1🍑1🖕1🔞1👀1🍈1👅1🎊1👙1|Do you like the view? Pics in bio!
-Hipster|30|🧔|👖1🤐1🦉2🐕1🍆2💪2🍺2🥱2✌1|I liked craft beer before it was cool.
-Karen|30|👩|🤮2🤬2👒1🍸2🥗2|Corner Cafe's avocados aren't organic! That should be illegal. And why do cafes keep shutting down?
-Creep|30|👨‍🦲|🤮1🍆3💦4🚽2👀2👅2😈3|hi mama will u cum to my place
-Regard|30|🧒|🚀2🦍2🐻3🐂1📈2🚽1🍔1🎰2|To the moon! 🚀
-Elon|225|👱|🍆1💦1💯2🚀2😂2🚗2🤰1📡1|secret elon text here.
+	gRivalInfos=`Boomer|25|👴|🤬3🏡1🏈2🔫1✝2🔊1🗽2💤4🏡1💤3|I bought my first house for 7 raspberries. The kids today are just lazy. Time for my nap.
+Guru|25|🧘|🧵3🙏3✌1🤐2☯2🥗2🛕1|The energy crystals harness the moon energy. That is why you are lucky.
+Model|25|💃|😈1👒1💋1🍑1🖕1🔞1👀1🍈1👅1🎊1👙1|Do you like the view? Pics in bio!
+Hipster|25|🧔|👖1🤐1🦉2🐕1🍆2💪2🍺2🥱2✌1|I liked craft beer before it was cool.
+Karen|25|👩|🤮2🤬2👒1🍸2🥗2|Corner Cafe's avocados aren't organic! That should be illegal. And why do cafes keep shutting down?
+Creep|25|👨‍🦲|🤮1🍆3💦4🚽2👀2👅2😈3|hi mama cum to my place
+Regard|25|🧒|🚀2🦍2🐻3🐂1📈2🚽1🍔1🎰2|To the moon! 🚀
+Elon|225|👱|🍆1💦1💯2🚀2😂2🚗2🤰1📡1|Go Donald Trump! Run the country through executive order!
 GotJunk||🛠||<b>Too Much Junk?</b> Expert junk emoji removal service. Any emoji, one low price!
+FanFast||✨||<b>Promote Your Profile!</b> Guaranteed new real fans. 1 for $1. Today only.
 Cutest||😻||<b>Sale!</b> ♥CUTE♥${gSale}
 Cool2Hate||👹||<b>Sale!</b> 💩HATE${gSale}
 Skillz||🧞‍♂️||<b>Sale!</b> 💡SKILL${gSale}
@@ -113,7 +114,7 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"🛕3Temple|😎+2 every post"},
 		{d:"📡3Satellite Dish|🗣+2 every post"},
 		{d:"👒3Woman's Hat|draw 1 when u get downvoted"},
-		{d:"🍔0Burgers|👍24\n😎-2 to u", attack:24, cool:-2, cost:2},
+		{d:"🍔0Burgers|👍26\n😎-2 to u", attack:26, cool:-2, cost:2},
 		{d:"🙏2Pray|Enemy loses all 🗣\n👤+1", onUse:_=>{gGuyShoutAdd(gGuyNow.other,-gGuyNow.other.shout);gGuyFanGain(gGuyNow)}},
 		{d:"💯2100%|2x ur 👍\n2x enemy 👎\nsend ur post now", block:_=>Math.max(0, -gGuyNow.other.votes), attack:_=>Math.max(0, gGuyNow.votes), ender:1},
 		{d:"🐂0Bull|👍13\n👍3 to enemy", attack:13, block:-3},
@@ -121,7 +122,7 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"🎰0Slot Machine|👍 random 1-20", onUse:_=>gGuyVotesAdd(gRandomInt(1,20)*gCardNowMultGet())},
 		{d:"🍸0Cocktail|👍5\n😎+3 if u have none, 😎-6 if u do", attack:5, onUse:card=>card.cool=gGuyNow.cool>0?-6:3},
 		{d:"🚗0Car|👍7\n💬+1 if u have more fans",attack:7,energy:_=>gGuyNow.fans>gGuyNow.other.fans?1:0},
-		{d:"🤮1Vomit|👎9 copy pasta this to the max", block:9, xAll:1},
+		{d:"🤮1Vomit|👎8 copy pasta this to the max", block:8, xAll:1},
 		{d:"💋0Kisses|👍9 copy pasta this to the max", attack:9, xAll:1},
 		{d:"🐕0Dog|👍10\ndiscard 1", attack:10, discard:1},
 		{d:"🥗0Salad|👍5\ndraw 1", attack:5, draw:1},
@@ -142,7 +143,7 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"🤢1Nausea|👎for each emoji in ur trash", block:_=>gGuyNow.trash.length},
 		{d:"🤐1Zippermouth|👎12 send ur post now", block:12, ender:1},
 		{d:"🤬1Face With Symbols|👎5\n🗣+2", block:5, shout:2},
-		{d:"👖2Jeans|😎+1\n2x ur 😎 when chosen to discard", cool:1, onDiscard:_=>gGuyCoolAdd(gGuyNow, gGuyNow.cool)},
+		{d:"👖2Jeans|😎+2\n2x ur 😎 when chosen to discard", cool:2, onDiscard:_=>gGuyCoolAdd(gGuyNow, gGuyNow.cool)},
 		{d:"☯ 1Yin Yang|👎 equal to ur post's 👍👎\ndiscard all", block:_=>Math.abs(gGuyNow.votes), discard: 8},
 		{d:"✝ 0The Cross|👍12\nLose 👤1", attack:12, onUse:_=>gGuyFansSet(gGuyNow,-1)},
 		{d:"📈3Increasing Chart|😎+1 🗣+1 after each post"},
@@ -152,7 +153,7 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"😈0Smiling Devil|👍5\n👎5", attack:5, block:5},
 		{d:"🥱1Yawn|👎3 💬+1", block:3, energy:1},
 		{d:"🍺0Beer|👍8\n🗣+1\ndiscard 1", attack:8, shout:1, discard:1},
-		{d:"💪2Flex|💬+1\n😎+2", energy:1, cool:1},
+		{d:"💪2Flex|💬+1\n😎+1", energy:1, cool:1},
 		{d:"🧵2Thread|💬+3", energy:3},
 		{d:"🤰1Pregnant|👎20 unless enemy is a woman", block:_=>gGuyNow.other!=gYou && gOr(gGuyNow.other.kind.icon,'💃','👩')?0:20},
 		{d:"👀2Eyes|💬+1\ndraw 2", energy:1, draw:2},
@@ -232,7 +233,7 @@ var gStateSet = state => {
 	
 	d.body.className = state+'State'
 	gGameDiv.className = ''
-	gBattleFansSet(0)
+	gBattleFansSet(gBattleFans)
 	gButtonShow()
 	gButtonShow(1)
 	
@@ -369,7 +370,7 @@ var gStateSet = state => {
 
 		gDivBottomSet(gMessageDiv, 38)
 		gMessageDiv.innerHTML = `Welcome to ${gRival.kind.name} shop`+html
-		gButtonShow(0, 'Leave', 22, gFeedGo)
+		gButtonShow(0, 'Leave', 22, gFeedGo2)
 	}
 
 	if(state == gStateFeedLoad) {
@@ -383,15 +384,15 @@ var gStateSet = state => {
 				var high = gDay>1&&gDay<13 ? 2:1
 				var specialI = gDay>12 ? 1:2
 				for(var rivalI=0; rivalI<=high; rivalI++) {
-					var rivalKind = gRivalKinds[rivalI==specialI ? gRandomInt(8,12) : Math.min(6, gRandomInt(1,3)*rivalI+(gDay-1)/2|0)]
-					rivalKind.fans += rivalKind.fans && gDay*gRandomInt(3,6)
+					var rivalKind = gRivalKinds[rivalI==specialI ? gRandomInt(8,13) : Math.min(6, gRandomInt(1,3)*rivalI+(gDay-1)/2|0)]
+					rivalKind.fans += rivalKind.fans && gDay*gRandomInt(2,5)
 					if(gDay>12 && !rivalI)rivalKind = gRivalKinds[7]
 					gBubbleMake(1, rivalKind.post, u, rivalKind)
 					if(rivalI==specialI) {
 						gRival = gGuyMake(rivalKind)
-						if(rivalKind.index > 8) {
+						if(rivalKind.index > 9) {
 							var total = 4
-							var kinds = gCardKinds.filter(kind=>kind.type==rivalKind.index-9)
+							var kinds = gCardKinds.filter(kind=>kind.type==rivalKind.index-10)
 							gShuffleArray(kinds)
 							for(var i=0; i<total; i++) {
 								card = gCardMake(kinds[i])
@@ -403,6 +404,9 @@ var gStateSet = state => {
 						}
 						if(rivalKind.icon == '🛠') {
 							gButtonMake('Buy $4', _=>gGold>3 && gStateSet(gStateCardRemove))
+						}
+						if(rivalKind.icon == '👨‍🎤') {
+							gButtonMake('Buy $1', _=>gGold && (gGoldAdd(-1),gGuyFansSet(gYou, 1),gSoundPlay(gCardPlaySounds[0])))
 						}
 					} else {
 						rivalKind.button = gButtonMake('💬 Reply', gBattleStart.bind(u,rivalKind))
@@ -504,14 +508,16 @@ var gGuyFansSet = (guy,fans) => {
 
 var gGameOverShow = win => {
 	var post = (win?gYou:gRival).posting.map(card=>card.kind.emoji).join('')
+	var score = '🏆'+(gDay*100+gYouVotesHigh+gGold)
 	var text = win ? 
-		"I cancelled Elon with this post: "+post
+		`I cancelled Elon with this post: ${post}
+${score}`
 		:
 		`I was cancelled by a ${gRival.kind.name} on August ${gDay}! They posted `+post
 	gKeyboardDiv.innerHTML = `
 		<div style='font-size:6rem;padding-top:18rem'>${win?'YOU SAVED THE INTERNET!':'Game Over'}</div>
-		<div style='font-size:4rem'>Best post ever: 🏆${gYouVotesHigh} (${gYouVotesHighPost})</div>
-		<div style='font-size:4rem'>Final Score: 🏆${gDay*100+gYouVotesHigh+gGold}</div>
+		<div style='font-size:4rem'>Best post ever: ${gYouVotesHigh} (${gYouVotesHighPost})</div>
+		<div style='font-size:4rem'>Final Score: ${score}</div>
 		<textarea style='width:50rem;height:15rem;font-size:3rem;margin:2rem'>${text}</textarea>
 	`
 	gButtonShow(0, "Copy to share", 22, _=>{
@@ -562,7 +568,7 @@ var gPrizeDone = cardChose =>{
 }
 
 var gBattleFansSet = fans => {
-	gBattleFans += fans
+	gBattleFans = fans
 	gBattleFansDiv.innerHTML = '👁'+gBattleFans
 	gDivBottomSet(gBattleFansDiv, gBattleIn ? gSizeY/gSizeX*100-25 : u)
 	gDivBottomSet(gFanAddDiv, gBattleIn ? gSizeY/gSizeX*100-25 : u)
@@ -672,7 +678,7 @@ var gRivalAI = _=> {
 	}
 	card = cans[0]
 	if(card) {
-		if(card.kind.ender) {
+		if(card.kind.ender || card.kind.discard>1 || card.kind.text.includes('prev')) {
 			gShuffleArray(cans)
 		}
 		if(gCardUse(cans[0])) {
@@ -696,7 +702,7 @@ var gGuyFanGain = guy => {
 		gDelay(_=>{
 			gFanAddDiv.innerHTML = ''
 			gFanAddDiv.style.left = '3rem'
-			gBattleFansSet(-1)
+			gBattleFansSet(gBattleFans-1)
 			gGuyFansSet(guy, 1)
 		}, 6)
 	}
@@ -954,26 +960,16 @@ var gPostingRender = _ => {
 	var html = ''
 	
 	
-	var card,cardI=0,cardStay=0
+	var card,cardI=0
 	for(var i=0; i<gEnergyMaxGet(gYou); i++) {
-		var card = gYou.posting[cardI]
+		card = gYou.posting[cardI]
 		if(card) {
-			html += `
-				<div style='border-bottom:1rem solid transparent'>${card.kind.emoji}</div>
-			`
-			if(!cardStay && card.kind.cost > 1) {
-				cardStay = card.kind.cost
-			}
+			i += card.kind.cost-1
+			html += `<div style='border-bottom:1rem solid transparent'>${card.kind.emoji}</div>`.repeat(card.kind.cost)
 		} else {
-			html += `
-				<div class=postingSlotEmpty></div>
-			`
+			html += `<div class=postingSlotEmpty></div>`
 		}
-		if(cardStay>1) {
-			cardStay--
-		} else {
-			cardI++
-		}
+		cardI++
 	}
 	gGuyPostBubbleRender(gYou, html)
 	
@@ -1447,17 +1443,20 @@ var gDeckShow = _=>{
 	}, 2)
 }
 
+var gFeedGo2 = _ => {
+	gDivBottomSet(gRivalDiv)
+	gDivBottomSet(gYouDiv)
+	gStateSet(gStateFeed)
+	gDivBottomSet(gLoadingDiv)
+	gDivBottomSet(gMessageDiv)
+}
+
 var gFeedGo = _ => {
 	gDivBottomSet(gMessageDiv)
 	gLoadingDiv.innerHTML = gLoadingDotsHtmlGet()
 	gDivBottomSet(gLoadingDiv, 99)
 	gButtonShow()
-	gDelay(_=>{
-		gDivBottomSet(gRivalDiv)
-		gDivBottomSet(gYouDiv)
-		gStateSet(gStateFeed)
-		gDivBottomSet(gLoadingDiv)
-	}, 4)
+	gDelay(gFeedGo2, 4)
 }
 
 var gKeyboardHeightSet = rem => gKeyboardDiv.style.height = rem+'rem'
@@ -1740,7 +1739,7 @@ header button{box-shadow:0 .3rem .2rem inset #FFF, #333 0px -.3rem .2rem inset;b
 #gBubblesDiv button{margin:-6rem auto 6rem;font-size:5rem}
 .card{transition:left .2s ease,bottom .2s ease,transform .2s ease,opacity .5s ease;position:absolute;z-index:1;transform-origin:top left}
 .card.faceUp:hover{z-index:2002 !important}
-.cardBack, .cardFront{display:flex;backface-visibility:hidden;border-radius:.05em;border:1px solid #777}
+.cardBack, .cardFront{display:flex;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:.05em;border:1px solid #777}
 .cardBack{transition:transform .2s ease;transform:rotateY(0);width:100%;height:100%;background-image:linear-gradient(180deg, #7ef 0%, #5bf 13%, #5bf 25%, #7ef 49%, #7ef 57%, #5bf 100%);text-shadow:0 0 1rem #fff;flex-direction:column;align-items:center;justify-content:center}
 .cardFront{transform:rotateY(180deg);box-shadow:0 2px 2px inset #cdf,0 -1px 0 0 inset #058;overflow:hidden;position:absolute;top:0;left:0;transition:transform .7s ease,top .4s ease;width:100%;height:100%;flex-direction:column;align-items:center;color:#000;background:#8CF}
 .card.faceUp .cardBack{transform:rotateY(180deg)}
