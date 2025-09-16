@@ -84,13 +84,13 @@ var gAppVersion=1,
 	gHandMax=8,
 	gEnergyStart=3,
 	gSale=' emojis on sale! Lowest price guaranteed. Today only.',
-	gRivalInfos=`Boomer|25|👴|🤬3🏡1🏈2🔫1✝2🔊1🗽2💤4🏡1💤3|I bought my first house for 7 raspberries. The kids today are just lazy. Time for my nap.
-Guru|25|🧘|🧵3🙏3✌1🤐2☯2🥗2🛕1|The energy crystals harness the moon energy. That is why you are lucky.
+	gRivalInfos=`Boomer|25|👴|🏡1🏈2🔫1✝2🔊1🗽1🤬3🍔3💤1🏡1💤3|I bought my first house for 7 raspberries. The kids today are just lazy. Time for my nap.
+Guru|25|🧘|🧵3🙏3✌1🤐2🥗2🤫2🛕1🤦2|The energy crystals harness the moon energy. That is why you are lucky.
 Model|25|💃|😈1👒1💋1🍑1🖕1🔞1👀1🍈1👅1🎊1👙1|Do you like the view? Pics in bio!
 Hipster|25|🧔|👖1🤐1🦉2🐕1🍆2💪2🍺2🥱2✌1|I liked craft beer before it was cool.
-Karen|25|👩|🤮2🤬2👒1🍸2🥗2|Corner Cafe's avocados aren't organic! That should be illegal. And why do cafes keep shutting down?
+Karen|25|👩|🤮2🤬2👒1🍸2🥗2⚠1|Corner Cafe's avocados aren't organic! That should be illegal. And why do cafes keep shutting down?
 Creep|25|👨‍🦲|🤮1🍆3💦4🚽2👀2👅2😈3|hi mama cum to my place
-Regard|25|🧒|🚀2🦍2🐻3🐂1📈2🚽1🍔1🎰2|To the moon! 🚀
+Regard|25|🧒|🚀2🦍2🐻3🐂1📈2🚽1🍔1🎰2|To the moon! 📈🚀
 Elon|225|👱|🍆1💦1💯2🚀2😂2🚗2🤰1📡1|Go Donald Trump! Run the country through executive order!
 GotJunk||🛠||<b>Too Much Junk?</b> Expert junk emoji removal service. Any emoji, one low price!
 FanFast||✨||<b>Promote Your Profile!</b> Guaranteed new real fans. 1 for $1. Today only.
@@ -107,28 +107,30 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"🚀0Rocket|👍1 for each 10 fans u have", attack:_=>(gGuyNow.fans/10|0)},
 		{d:"🦍2Apes|draw 2\n🗣+6", cost:2, draw:2, shout:6},
 		{d:"😭0Crying|👍10 if u have no cool", attack:_=>gGuyNow.cool < 1 ? 10:0},
+		{d:"😘2Blowing a Kiss|increase all 👍👎 by 50%", block:_=>-gGuyNow.other.votes>>1, attack:_=>gGuyNow.votes>>1},
 		{d:"🗽0Statue of Liberty|👍10 if u haven't posted any hate", attack:_=>gGuyNow.posting.find(card=>card.block)?0:10},
 		{d:"🍵0Tea|👍5\n😎+2", attack:5, cool:2},
 		{d:"😂1Tears of joy|👎 for each 👍 ur post has", block:_=>Math.max(0, gGuyNow.votes)},
 		{d:"✌ 2Peace Sign|add 3x ☮ to ur enemy's deck", onUse:_=>{for(var i=0;i<3;i++)gCardDeckAdd(gCardMake(gCardKindsByEmoji['☮']), gGuyNow.other);gDeckShuffle(gGuyNow.other)}},
-		{d:"🛕3Temple|😎+2 every post"},
-		{d:"📡3Satellite Dish|🗣+2 every post"},
+		{d:"🛕3Temple|😎+2 after each post"},
+		{d:"📡3Satellite Dish|🗣+2 after each post"},
 		{d:"👒3Woman's Hat|draw 1 when u get downvoted"},
+		{d:"🤦1Facepalm|👎4x enemy's post size", block:_=>(gGuyNow==gYou ? gGuyNow.other.posting.length : gEnergyStart)*4},
+		{d:"🤫1Shush|👎6\nenemy loses all 🗣", block:_=>6, onUse:_=>gGuyShoutAdd(gGuyNow.other, -gGuyNow.other.shout)},
+		{d:"🙏2Pray|👤+1 💬+1", energy:1, onUse:_=>gGuyFanGain(gGuyNow)},
 		{d:"🍔0Burgers|👍26\n😎-2 to u", attack:26, cool:-2, cost:2},
-		{d:"🙏2Pray|Enemy loses all 🗣\n👤+1", onUse:_=>{gGuyShoutAdd(gGuyNow.other,-gGuyNow.other.shout);gGuyFanGain(gGuyNow)}},
-		{d:"💯2100%|2x ur 👍\n2x enemy 👎\nsend ur post now", block:_=>Math.max(0, -gGuyNow.other.votes), attack:_=>Math.max(0, gGuyNow.votes), ender:1},
 		{d:"🐂0Bull|👍13\n👍3 to enemy", attack:13, block:-3},
 		{d:"🐻1Bear|👎13\n👎3 to u", block:13, attack:-3},
 		{d:"🎰0Slot Machine|👍 random 1-20", onUse:_=>gGuyVotesAdd(gRandomInt(1,20)*gCardNowMultGet())},
-		{d:"🍸0Cocktail|👍5\n😎+3 if u have none, 😎-6 if u do", attack:5, onUse:card=>card.cool=gGuyNow.cool>0?-6:3},
-		{d:"🚗0Car|👍7\n💬+1 if u have more fans",attack:7,energy:_=>gGuyNow.fans>gGuyNow.other.fans?1:0},
+		{d:"🍸0Cocktail|👍6\n😎+3 if u have none, 😎-6 if u do", attack:6, onUse:card=>card.cool=gGuyNow.cool>0?-6:3},
+		{d:"🚗0Car|💬+1\n👍6 if u have more fans",attack:_=>gGuyNow.fans>gGuyNow.other.fans?6:0, energy:1},
 		{d:"🤮1Vomit|👎8 copy pasta this to the max", block:8, xAll:1},
 		{d:"💋0Kisses|👍9 copy pasta this to the max", attack:9, xAll:1},
-		{d:"🐕0Dog|👍10\ndiscard 1", attack:10, discard:1},
+		{d:"🐕0Dog|👍5 😎+1\ndiscard 1", attack:10, discard:1, cool:1},
 		{d:"🥗0Salad|👍5\ndraw 1", attack:5, draw:1},
 		{d:"🍈0Melons|👍20", cost:2, attack:20},
 		{d:"💄2Lipstick|😎+4", cool:4},
-		{d:"👅0Tongue|👍10 if enemy post is positive", attack:_=>gGuyNow.other.votes > 0 ? 10:0},
+		{d:"👅0Tongue|👍15 if enemy has more fans", attack:_=>gGuyNow.other.fans>gGuyNow.fans?15:0},
 		{d:"🎊0Confetti|👍21 to everyone!", attack:21, block:-21},
 		{d:"🍆1Eggplant|👎9", block:9},
 		{d:"👙0Bikini|👍22\nenemy gets 🗣+3",attack:22, onUse:_=>gGuyShoutAdd(gGuyNow.other,3)},
@@ -142,9 +144,8 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"🚽3Toilet|👎1 every time u use an emoji"},
 		{d:"🤢1Nausea|👎for each emoji in ur trash", block:_=>gGuyNow.trash.length},
 		{d:"🤐1Zippermouth|👎12 send ur post now", block:12, ender:1},
-		{d:"🤬1Face With Symbols|👎5\n🗣+2", block:5, shout:2},
+		{d:"🤬1Face With Symbols|👎4\n🗣+2", block:4, shout:2},
 		{d:"👖2Jeans|😎+2\n2x ur 😎 when chosen to discard", cool:2, onDiscard:_=>gGuyCoolAdd(gGuyNow, gGuyNow.cool)},
-		{d:"☯ 1Yin Yang|👎 equal to ur post's 👍👎\ndiscard all", block:_=>Math.abs(gGuyNow.votes), discard: 8},
 		{d:"✝ 0The Cross|👍12\nLose 👤1", attack:12, onUse:_=>gGuyFansSet(gGuyNow,-1)},
 		{d:"📈3Increasing Chart|😎+1 🗣+1 after each post"},
 		{d:"🏡3House With Garden|💬+1 on each post"},
@@ -152,9 +153,11 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"🧠3Brain|draw 1 extra each time ur turn starts"},
 		{d:"😈0Smiling Devil|👍5\n👎5", attack:5, block:5},
 		{d:"🥱1Yawn|👎3 💬+1", block:3, energy:1},
-		{d:"🍺0Beer|👍8\n🗣+1\ndiscard 1", attack:8, shout:1, discard:1},
+		{d:"🍺0Beer|👍7\n🗣+1\ndiscard 1", attack:7, shout:1, discard:1},
 		{d:"💪2Flex|💬+1\n😎+1", energy:1, cool:1},
 		{d:"🧵2Thread|💬+3", energy:3},
+		{d:"⚠ 2Warning|💬+2\n🗣+1 to everyone", energy:2, shout:1, onUse:_=>gGuyShoutAdd(gGuyNow.other,1)},
+		{d:"💯2100%|2x all 👍👎\nsend ur post now", block:_=>-gGuyNow.other.votes, attack:_=>gGuyNow.votes, ender:1},
 		{d:"🤰1Pregnant|👎20 unless enemy is a woman", block:_=>gGuyNow.other!=gYou && gOr(gGuyNow.other.kind.icon,'💃','👩')?0:20},
 		{d:"👀2Eyes|💬+1\ndraw 2", energy:1, draw:2},
 		{d:"🦉2Owl|draw 3\ndiscard 2", draw:3, discard: 2},
@@ -405,7 +408,7 @@ var gStateSet = state => {
 						if(rivalKind.icon == '🛠') {
 							gButtonMake('Buy $4', _=>gGold>3 && gStateSet(gStateCardRemove))
 						}
-						if(rivalKind.icon == '👨‍🎤') {
+						if(rivalKind.icon == '✨') {
 							gButtonMake('Buy $1', _=>gGold && (gGoldAdd(-1),gGuyFansSet(gYou, 1),gSoundPlay(gCardPlaySounds[0])))
 						}
 					} else {
@@ -445,7 +448,7 @@ var gGuyFansSet = (guy,fans) => {
 			guy.fans = 0
 			gBattleIn = 2
 			
-			gBubbleDivAdd('','grow55')
+			gBubbleDivAdd("<div style='height:55rem'></div>")
 			
 			gBubblesDivScrollBottom()
 			
@@ -460,7 +463,7 @@ var gGuyFansSet = (guy,fans) => {
 						gDivClassSet(d.documentElement,'shake', 4)
 						gSoundPlay(gVibrateSound)
 					}, 5)
-					gDelay(_=> guy!=gYou ? gBubbleMake(0,"justice is served!",1): (gBubbleMake(1,"hahaha!",1),gBubbleDivAdd("<div style='height:24rem'></div>",'grow33')), 9)
+					gDelay(_=> guy!=gYou ? gBubbleMake(0,"justice is served!",1): (gBubbleMake(1,"hahaha!",1),gBubbleDivAdd("<div style='height:24rem'></div>")), 9)
 					if(guy==gYou) {
 						gBattleCleanup()
 						gGameOverShow()
@@ -527,6 +530,9 @@ ${score}`
 }
 
 var gBattleCleanup = _=> {
+	for(var card of gYou.items) {
+		gCardTrashGo(card)
+	}
 	gBattleIn = 0
 	gTrashClear(gYou)
 	gHandRender()
@@ -623,18 +629,6 @@ var gBattleStart = rivalKind => {
 var gRoundStart = _ => {
 	if(gBattleIn>1)return
 	console.log("gRoundStart()", gRound)
-	/*
-	if(gBattleFans<1) {
-		gBubbleDivAdd(`<div style='height:33rem'></div>`, 'grow33')
-		var html = ''
-		for(var i=0;i<gYou.fans;i++) {
-			html += `<div style='border-radius:99%;border:.5rem solid #2E2;position:absolute;bottom:3rem;left:2rem'></div>` 
-		}
-		gBubbleDivAdd(`<div style='height:33rem;position:relative' id=gFightDiv>${html}</div>`, 'grow33')
-		gBubblesDivScrollBottom()
-		return
-	}
-	*/
 	gRound++
 	gYou.votes = gRival.votes = 0
 	gYou.posting = []
@@ -743,14 +737,14 @@ var gSend = _=>{
 				gGuyFansSet(gRival, votes2)
 				gDraw(3*gGuyPostTotalGet('💤', gRival), gRival)
 			}
-			
-			if((votes > 0 || votes2 > 0) && votes != votes2) {
+
+			var delay = 7
+			if((votes > 0 || votes2 > 0) && votes != votes2 && gBattleFans>0) {
 				gGuyFanGain(votes > votes2 ? gYou:gRival)
+				delay += 6
 			}
 			
-			gDelay(_=>{
-				gRoundStart()
-			}, 7 + (votes>0 || votes2>0)*6)
+			gDelay(gRoundStart, delay)
 	
 			for(var guy of guys) {
 				for(var card of guy.posting) {
@@ -804,8 +798,8 @@ var gDraw = (total,guy) => {
 	if(gBattleIn>1)return
 	if(total) {
 		if(!guy)guy = gGuyNow
-		console.log("gDraw()", total)
 		if(total>1) {
+			console.log("gDraw()", total)
 			for(var i=0; i<total; i++) {
 				if(guy == gYou) {
 					gDelay(_=>gDraw(1,guy), i)
@@ -886,7 +880,7 @@ var gCardFlipDown = card => {
 	card.div.style.fontSize = gCardRem*.4+'rem'
 }
 
-var gLoadingDotsHtmlGet = _ => Array.from({length:3},(_,i)=>`<div style='width:1.5rem;height:1.5rem;border-radius:99%;display:inline-block;margin:6rem .5rem 3rem;animation:load 1s infinite;background:#09C;animation-delay:.${i*2}s'></div>`).join('')
+var gLoadingDotsHtmlGet = _ => Array.from({length:3},(_,i)=>`<div style='width:1.5rem;height:1.5rem;border-radius:99%;display:inline-block;margin:5rem .5rem 3rem;animation:load 1s infinite;background:#09C;animation-delay:.${i*2}s'></div>`).join('')
 
 
 var gCardInfoShow = (div) => {
@@ -986,7 +980,7 @@ var gGuyPostBubbleRender = (guy, html) => {
 	
 	gBubbleTextSet(guy.postBubble, `
 		<div class=emoji style='font-size:7rem;display:flex;align-items:flex-end;min-height:10rem;white-space:nowrap'>${html}</div>
-		<div style='font-weight:bold;white-space:nowrap;position:absolute;top:100%;${guy!=gYou?'left':'right'}:0;font-size:5rem;color:#${guy.votes<0?'E':'0'}00'>${thumb}</div>
+		<div style='text-shadow:-1px -1px 1px #FFF,1px 1px 1px #FFF;font-weight:bold;white-space:nowrap;position:absolute;top:100%;${guy!=gYou?'left':'right'}:0;font-size:6rem;color:#${guy.votes<0?'E':'0'}00'>${thumb}</div>
 	`)
 }
 
@@ -1022,7 +1016,7 @@ var gItemsRender = guy =>{
 	guy.itemsDiv.innerHTML =
 		gTextIf(guy.shout, `<div>🗣${guy.shout}</div>`) +
 		gTextIf(guy.cool, `<div>😎${guy.cool}</div>`) +
-		guy.items.map(card=>`<div>${card.kind.emoji}</div>`).join('')
+		guy.items.map(card=>`<div>${card.kind.emoji}</div>`).join(' ')
 }
 
 var gTrashToggle = _=> {
@@ -1224,6 +1218,8 @@ var gCardUsePostAdd = card => {
 	if(attack) {
 		gGuyVotesAdd(attack)
 	}
+
+	//gGuyVotesAdd((gGuyItemTotalGet('📵', gYou) + gGuyItemTotalGet('📵', gRival))*-2)
 
 
 	card.attack = attack
@@ -1547,13 +1543,13 @@ var gCardTextHtmlGet = card => {
 	if(gBattleIn) {
 		var attack = gCardAttackNowGet(card)
 		if(attack != kind.attack && kind.attack && !(kind.attack<0)) {
-			if(attack)attack=`<span style='color:#2D2'>${attack}</span>`
+			if(attack)attack=`<span style='color:#34E'>${attack}</span>`
 			text += `<br>(👍${attack})`
 			lines++
 		}
 		var block = gCardBlockNowGet(card)
 		if(block != kind.block && kind.block && !(kind.block<0)) {
-			if(block)block=`<span style='color:#2D2'>${block}</span>`
+			if(block)block=`<span style='color:#34E'>${block}</span>`
 			text += `<br>(👎${block})`
 			lines++
 		}
@@ -1607,16 +1603,18 @@ var gBubbleMake = (right, html, maxHeight0, rival) => {
 				<div class=bubbleArrow></div>
 			</div>
 		</div>
-	`, 'bubble '+(right?'right':'left')+gTextIf(maxHeight0,' grow33'))
+	`, 'bubble '+(right?'right':'left'))
 	
 	gBubblesDivScrollBottom()
 	return i
 }
 
 var gBubblesDivScrollBottom = _ => {
-	var f = _=>gBubblesDiv.parentNode.scrollTo({top: 99999,behavior: 'smooth'})
-	for(var j=0;j<33;j++) {
-		gDelay(f,j*.3)
+	
+	//gBubblesDiv.parentNode.scrollTop=1e4//
+	var f = _=>gBubblesDiv.parentNode.scrollTo({top: 1e4, behavior: /iPhone/i.test(navigator.userAgent) ? 'instant':'smooth'})
+	for(var j=0;j<22;j++) {
+		gDelay(f,j*.2)
 	}
 }
 
@@ -1664,7 +1662,7 @@ w.onload = _=>{
 		</div>
 		<button id=gMuteButton style="position:relative;font-size:5rem;padding-right:2rem;padding-left:2rem;line-height:1">🔊</button>
 	</header>
-	<div style='flex-grow:1;overflow:auto;position:relative;z-index:1;padding:0 2rem'>
+	<div style='flex-grow:1;overflow:auto;-webkit-overflow-scrolling:touch;position:relative;z-index:1;padding:0 2rem'>
 		<div id=gBubblesDiv style='padding-bottom:3rem;min-height:100%;display:flex;flex-direction:column;justify-content:flex-end'></div>
 	</div>
 	<div id=gKeyboardDiv style='transition:all .5s ease;height:55rem;position:relative;z-index:2;width:104%;left:-2%;flex-shrink:0;background:#DDD;box-shadow:0 0 1rem #BBB,0 0 1rem inset #FFF'></div>
@@ -1709,10 +1707,16 @@ w.onload = _=>{
 	<div id=gOverlayDiv></div>
 	<div id=gHelpDiv style='font-size:4rem;font-weight:normal;border-radius:4rem;z-index:2000;position:absolute;inset:2rem;top:16rem;box-shadow:0 0 1rem #000;background:#FFF;color:#000;overflow:auto;display:none;padding:3rem'>
 		Read the description for tips:
-		<a target='_blank' href='https://play.google.com/store/apps/details?id=com.curtastic.cancelelon' style='text-decoration:none;margin:2rem;padding:0 2rem;display:inline-flex;border-radius:1.4rem;color:#FFF;background:#000;font-size:8rem;align-items:center'>
+		<a target='_blank' href='https://play.google.com/store/apps/details?id=com.curtastic.cancelelon'>
 			▶
-			<div style='font-size:4.5rem;text-align:left;margin:0 1rem'>
+			<div>
 				<div style='font-size:2rem'>GET IT ON</div>Google Play
+			</div>
+		</a>
+		<a target='_blank' href='https://curtastic.com/c'>
+			🍎
+			<div>
+				<div style='font-size:2rem'>Download on the</div>App Store
 			</div>
 		</a>
 		<div style='font-size:7rem;margin-top:5rem'>Emojidex</div>
@@ -1750,7 +1754,10 @@ header button{box-shadow:0 .3rem .2rem inset #FFF, #333 0px -.3rem .2rem inset;b
 .upNow>div,.downNow>div{z-index:2;font-size:.13em;position:absolute;bottom:0;line-height:.9;background:#FFD;border:1px solid #ddd;padding:1rem;border-radius:1rem}
 .upNow>div{left:0}
 .downNow>div{right:0}
+#gYouItemsDiv>div,#gRivalItemsDiv>div{margin:0 1rem}
 
+a{text-decoration:none;margin:2rem;padding:0 2rem;display:inline-flex;border-radius:1.4rem;color:#FFF;background:#000;font-size:8rem;align-items:center;filter:grayscale(1)}
+a>div{font-size:4.5rem;text-align:left;margin:0 1rem}
 .bubble{margin-bottom:8rem}
 .bubble.left{margin-right:auto;margin-left: 10rem;}
 .bubble.right{margin-left:auto}
@@ -1767,8 +1774,6 @@ header button{box-shadow:0 .3rem .2rem inset #FFF, #333 0px -.3rem .2rem inset;b
 .loseState #gYouDiv{left:20rem}
 .loseState svg{fill:#666}
 
-.grow33{max-height:0;animation:grow33 .3s forwards}
-.grow55{max-height:0;height:55rem;animation:grow55 .3s forwards}
 #gOverlayDiv{position:absolute;inset:0;bottom:100%;background:#0008;z-index:9999}
 .discardState #gOverlayDiv{bottom:70.6rem}
 #gHandPickDiv{animation:notice 1s infinite;z-index:2222;position:absolute;bottom:-9rem;left:50%;transform:translateX(-50%);font-size:3rem;background:#ABF;padding:0.1rem 2rem;border-radius:2rem}
@@ -1823,15 +1828,6 @@ header button{box-shadow:0 .3rem .2rem inset #FFF, #333 0px -.3rem .2rem inset;b
 @keyframes votedUp {
 	0%, 100% {transform:translateY(0)}
 	60% {transform:translateY(-1rem);filter:hue-rotate(99deg) brightness(1.3);color:#E00}
-}
-
-@keyframes grow55{
-	0% {max-height:0}
-	100% {max-height:55rem}
-}
-@keyframes grow33{
-	0% {max-height:0}
-	100% {max-height:33rem}
 }
 
 .shake{animation:shake .3s forwards}
@@ -2159,6 +2155,13 @@ gCardPlaySounds[1] = gSoundMake(i => {
 	var q = t(i,m)
 	return gSin(i*.01*gSin(.003*i+gSin(i,7))+gSin(i,1))*q*q
 })
+
+var gExport = _ => {
+	return JSON.stringify(gCardKinds.map(kind=>({emoji:kind.emoji, name:kind.name, text:kind.text, cost:kind.cost, type:kind.type})))
+}
+var gExport2 = _ => {
+	return JSON.stringify(gRivalKinds.map(kind=>({icon:kind.icon, name:kind.name, post:kind.post, fans:kind.fans, deck:kind.deck.join()})))
+}
 
 /*
 gSoundMake(i => {
