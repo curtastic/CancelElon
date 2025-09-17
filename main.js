@@ -1,6 +1,6 @@
 //!function(){
 "use strict"
-var w=window,d=document,n=null,u
+var w=window,d=document,n=null,u,gPlatform='web'
 
 var gCardTypeIcons = ['😊','💩','💡','🎁']
 
@@ -32,6 +32,8 @@ var gGuyMake = kind => {
 }
 
 var gAppVersion=1,
+	gMousePan=.5,gMouseX=0,gMouseY=0,
+	gVibrateEnabled,
 	gYouVotesHigh=0,gYouVotesHighPost,
 	gIntroSpeed=9,
 	gState='loading',
@@ -91,7 +93,7 @@ Hipster|25|🧔|👖1🤐1🦉2🐕1🍆2💪2🍺2🥱2✌1|I liked craft beer 
 Karen|25|👩|🤮2🤬2👒1🍸2🥗2⚠1|Corner Cafe's avocados aren't organic! That should be illegal. And why do cafes keep shutting down?
 Creep|25|👨‍🦲|🤮1🍆3💦4🚽2👀2👅2😈3|hi mama cum to my place
 Regard|25|🧒|🚀2🦍2🐻3🐂1📈2🚽1🍔1🎰2|To the moon! 📈🚀
-Elon|225|👱|🍆1💦1💯2🚀2😂2🚗2🤰1📡1|Go Donald Trump! Run the country through executive order!
+${(gPlatform=='ios'?'RichGuy':'Elon')}|225|👱|🍆1💦1💯2🚀2😂2🚗2🤰1📡1|Go Donald Trump! Run the country through executive order!
 GotJunk||🛠||<b>Too Much Junk?</b> Expert junk emoji removal service. Any emoji, one low price!
 FanFast||✨||<b>Promote Your Profile!</b> Guaranteed new real fans. 1 for $1. Today only.
 Cutest||😻||<b>Sale!</b> ♥CUTE♥${gSale}
@@ -403,7 +405,7 @@ var gStateSet = state => {
 								card.state = gCardStateShop
 								gRival.deck.push(card)
 							}
-							gButtonMake('Shop Now', _=>gStateSet(gStateShop))
+							gButtonMake('🛒 Shop Now', _=>gStateSet(gStateShop))
 						}
 						if(rivalKind.icon == '🛠') {
 							gButtonMake('Buy $4', _=>gGold>3 && gStateSet(gStateCardRemove))
@@ -459,10 +461,7 @@ var gGuyFansSet = (guy,fans) => {
 				gDivBottomSet(guy.div, 105)
 				gDelay(_=> {
 					gStateStateSet(2)
-					gDelay(_=> {
-						gDivClassSet(d.documentElement,'shake', 4)
-						gSoundPlay(gVibrateSound)
-					}, 5)
+					gDelay(_=> gVibrate(), 5)
 					gDelay(_=> guy!=gYou ? gBubbleMake(0,"justice is served!",1): (gBubbleMake(1,"hahaha!",1),gBubbleDivAdd("<div style='height:24rem'></div>")), 9)
 					if(guy==gYou) {
 						gBattleCleanup()
@@ -492,7 +491,7 @@ var gGuyFansSet = (guy,fans) => {
 								}
 								gDivBottomSet(gMessageDiv, 72)
 								gMessageDiv.innerHTML = `<div style='margin-bottom:2rem'>Your fans donated $6 to you!</div>You can take an emoji:`
-								gButtonShow(0, 'No Thanks', 22, gPrizeDone)
+								gButtonShow(0, '❌ No Thanks', 22, gPrizeDone)
 								
 								gGoldAdd(6)
 							}
@@ -513,7 +512,7 @@ var gGameOverShow = win => {
 	var post = (win?gYou:gRival).posting.map(card=>card.kind.emoji).join('')
 	var score = '🏆'+(gDay*100+gYouVotesHigh+gGold)
 	var text = win ? 
-		`I cancelled Elon with this post: ${post}
+		`I cancelled ${gRival.kind.name} with this post: ${post}
 ${score}`
 		:
 		`I was cancelled by a ${gRival.kind.name} on August ${gDay}! They posted `+post
@@ -980,7 +979,7 @@ var gGuyPostBubbleRender = (guy, html) => {
 	
 	gBubbleTextSet(guy.postBubble, `
 		<div class=emoji style='font-size:7rem;display:flex;align-items:flex-end;min-height:10rem;white-space:nowrap'>${html}</div>
-		<div style='text-shadow:-1px -1px 1px #FFF,1px 1px 1px #FFF;font-weight:bold;white-space:nowrap;position:absolute;top:100%;${guy!=gYou?'left':'right'}:0;font-size:6rem;color:#${guy.votes<0?'E':'0'}00'>${thumb}</div>
+		<div style='text-shadow:-2px -2px 1px #FFF,2px -2px 1px #FFF,-2px 2px 1px #FFF,2px 2px 1px #FFF;font-weight:bold;white-space:nowrap;position:absolute;top:100%;${guy!=gYou?'left':'right'}:0;font-size:6rem;color:#${guy.votes<0?'E':'0'}00'>${thumb}</div>
 	`)
 }
 
@@ -1640,210 +1639,7 @@ var gResize = _=>{
 	})
 }
 
-//var gMousePan=.5
 w.onload = _=>{
-	d.body.innerHTML = `
-<div class=phoneButton><div></div><div style='margin-top:22px'></div></div>
-<div id=gGameDiv style='display:flex;flex-direction:column;z-index:1;width:65vh;height:100vh;position:relative;background:#f5f2eb;overflow:hidden;box-shadow:-12px 0 0 #000,-16px 0 0 #AAA,12px 0 0 #000,16px 0 0 #AAA'>
-	<div id=gBg style='line-height:.9;position:absolute;inset:0;color:#f5f2eb;font-size:9rem;letter-spacing:-1.4rem;font-family:arial'></div>
-	<header style='position:relative;z-index:2;padding:2rem;display:flex;justify-content:space-between;align-items:center;width:100%;background:#EEE;box-shadow:0 0 1rem #AAA'>
-		<button id=gHelpButton style="position:relative;font-size:5rem;padding-right:3rem;padding-left:3rem;line-height:1">❓</button>
-		<div style="position:relative">
-			<div style="position:absolute;font-size:8rem;left:-3.5rem;top:-1.7rem">👤</div>
-			<div id=gHpDiv></div>
-		</div>
-		<div style='position:relative'>
-			<div style="position:absolute;font-size:9rem;left:-4rem;top:-2.7rem">🌞</div>
-			<div id=gDayDiv>1</div>
-		</div>
-		<div style='position:relative'>
-			<div style="position:absolute;font-size:9rem;left:-4rem;top:-2.7rem">💰</div>
-			<div id=gGoldDiv></div>
-		</div>
-		<button id=gMuteButton style="position:relative;font-size:5rem;padding-right:2rem;padding-left:2rem;line-height:1">🔊</button>
-	</header>
-	<div style='flex-grow:1;overflow:auto;-webkit-overflow-scrolling:touch;position:relative;z-index:1;padding:0 2rem'>
-		<div id=gBubblesDiv style='padding-bottom:3rem;min-height:100%;display:flex;flex-direction:column;justify-content:flex-end'></div>
-	</div>
-	<div id=gKeyboardDiv style='transition:all .5s ease;height:55rem;position:relative;z-index:2;width:104%;left:-2%;flex-shrink:0;background:#DDD;box-shadow:0 0 1rem #BBB,0 0 1rem inset #FFF'></div>
-	
-	<div id=gYouDiv>
-		<svg width=1em height=1em viewBox="0 0 24 24">
-			<path d="M4-2 L11 9 L4 9"/>
-			<path d="M20-2 L20 9 L13 9"/>
-			<rect x="0" y="4" width="24" height="20" rx="10" ry="10"/>
-			<g stroke="white" stroke-width="2">
-				<circle cx="8" cy="12" r="2"/>
-				<circle cx="16" cy="12" r="2"/>
-			</g>
-			<ellipse cx="12" cy="17" rx="2" ry="1" fill="pink"/>
-		</svg>
-		<div style='position:relative;left:1rem;top:-2rem;font-size:4.5rem;display:flex'>
-			<div id=gYouFansDiv></div>
-			<div id=gYouItemsDiv style='display:flex'></div>
-		</div>
-	</div>
-	<div id=gRivalDiv style='text-align:right'>
-		<div style='display:inline-block'>
-			<div id=gRivalNameDiv style='font-size:3rem;white-space:nowrap;text-align:center'></div>
-			<div id=gRivalIconDiv></div>
-		</div>
-		<div style='position:relative;right:1rem;font-size:4.5rem;display:flex'>
-			<div id=gRivalItemsDiv style='display:flex'></div>
-			<div id=gRivalFansDiv></div>
-		</div>
-	</div>
-	<div id=gLoadingDiv style='position:absolute;bottom:999rem;left:47rem;font-size:3rem'></div>
-	<button id=gButton style='z-index:3;position:absolute;bottom:999rem;left:50rem;font-size:5rem;background:#2A2;color:#FFF;transform:translateX(-50%)'></button>
-	<button id=gButton2 style='z-index:3;position:absolute;bottom:999rem;left:50rem;font-size:5rem;background:#2A2;color:#FFF;transform:translateX(-50%)'></button>
-	<button id=gSendButton style='position:absolute;z-index:3;right:1rem;font-size:5rem;background:#2A2;color:#FFF'>Send</button>
-	<div id=gDeckDiv style='position:absolute;left:1rem;border-radius:.5rem;background:#CCC;width:9.6rem;height:13.7rem;z-index:2'></div>
-	<div id=gTrashDiv style='cursor:pointer;position:absolute;z-index:3;background-size:cover;width:1.2em;height:1.3em;left:20rem;font-size:12rem' class=emoji>🗑</div>
-	<div id=gBattleFansDiv style='position:absolute;z-index:2;left:2rem;font-size:6rem;background:#ABF;border-radius:9rem;padding:1rem 2rem;line-height:1;box-shadow:.3rem .5rem .5rem #888'></div>
-	<div id=gFanAddDiv></div>
-	<div id=gCardsDiv></div>
-	<div id=gMessageDiv style='font-size:3rem;position:absolute;z-index:4;left:0;right:0;pointer-events:none'></div>
-	<div id=gCancelDiv><div style='transform:scaleY(1.5)'>CANCELLED</div></div>
-	<div id=gOverlayDiv></div>
-	<div id=gHelpDiv style='font-size:4rem;font-weight:normal;border-radius:4rem;z-index:2000;position:absolute;inset:2rem;top:16rem;box-shadow:0 0 1rem #000;background:#FFF;color:#000;overflow:auto;display:none;padding:3rem'>
-		Read the description for tips:
-		<a target='_blank' href='https://play.google.com/store/apps/details?id=com.curtastic.cancelelon'>
-			▶
-			<div>
-				<div style='font-size:2rem'>GET IT ON</div>Google Play
-			</div>
-		</a>
-		<a target='_blank' href='https://curtastic.com/c'>
-			🍎
-			<div>
-				<div style='font-size:2rem'>Download on the</div>App Store
-			</div>
-		</a>
-		<div style='font-size:7rem;margin-top:5rem'>Emojidex</div>
-		<div id=gHelpCardsDiv>
-		</div>
-	</div>
-	<div id=gHandPickDiv></div>
-	<div id=gTrashViewDiv>
-		<button id=gTrashViewCloseButton style='position:absolute;right:-3rem;top:-3rem;font-size:8rem;border-radius:99%;transform:scale(.8);z-index:9999;padding-left:3rem;padding-right:3rem'>❌</button>
-		<div style='margin:1rem;font-size:3rem'>Discard Pile</div>
-	</div>
-</div>
-<div class=phoneButton><div style='transform:translateX(32px) scale(-1,1.5)'></div></div>
-<div id=gCardInfoDiv style='z-index:3000;display:none;pointer-events:none;width:23rem;background:#FFD;position:absolute;padding:1.5rem;border-radius:2rem;transform:translateX(-50%);box-shadow:0 1rem 1rem #333'
-	><div></div><div style='position:absolute;bottom:100%;left:50%;transform:translateX(-50%);border:2rem solid transparent;border-bottom-color:#FFD'></div></div>
-	`
-	
-	var styles = `
-*{user-select:none;-webkit-touch-callout:none;outline:none;box-sizing:border-box}
-body{margin:0;display:flex;justify-content:center;align-items:center;overflow:hidden;height:100%;width:100%;text-align:center;font-weight:bold;font-family:arial}
-button{font-weight:bold;cursor:pointer;border:none;box-shadow:0 .3rem .2rem inset #CFC, #333 0px -.3rem .2rem inset;padding:3rem 6rem;border-radius:2rem;color:#FFF;background:#2A2}
-button:active{box-shadow:0 -.2rem .2rem inset #FFF, #333 0px .2rem .2rem inset;padding-top:3.2rem;padding-bottom:2.8rem}
-header button{box-shadow:0 .3rem .2rem inset #FFF, #333 0px -.3rem .2rem inset;background:transparent}
-#gBubblesDiv button{margin:-6rem auto 6rem;font-size:5rem}
-.card{transition:left .2s ease,bottom .2s ease,transform .2s ease,opacity .5s ease;position:absolute;z-index:1;transform-origin:top left}
-.card.faceUp:hover{z-index:2002 !important}
-.cardBack, .cardFront{display:flex;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:.05em;border:1px solid #777}
-.cardBack{transition:transform .2s ease;transform:rotateY(0);width:100%;height:100%;background-image:linear-gradient(180deg, #7ef 0%, #5bf 13%, #5bf 25%, #7ef 49%, #7ef 57%, #5bf 100%);text-shadow:0 0 1rem #fff;flex-direction:column;align-items:center;justify-content:center}
-.cardFront{transform:rotateY(180deg);box-shadow:0 2px 2px inset #cdf,0 -1px 0 0 inset #058;overflow:hidden;position:absolute;top:0;left:0;transition:transform .7s ease,top .4s ease;width:100%;height:100%;flex-direction:column;align-items:center;color:#000;background:#8CF}
-.card.faceUp .cardBack{transform:rotateY(180deg)}
-.card.faceUp .cardFront{transform:rotateY(360deg)}
-.card.cantUse{filter:brightness(.8)}
-.card:not(.cantUse) .cardFront:hover{transition-duration:.2s;filter:brightness(1.05);top:-.03em;box-shadow:0 .03em .03em #0002,0 2px 4px inset #cdf,0 0 1px #000}
-.card:not(.cantUse) .cardFront{cursor:pointer}
-.upNow>div,.downNow>div{z-index:2;font-size:.13em;position:absolute;bottom:0;line-height:.9;background:#FFD;border:1px solid #ddd;padding:1rem;border-radius:1rem}
-.upNow>div{left:0}
-.downNow>div{right:0}
-#gYouItemsDiv>div,#gRivalItemsDiv>div{margin:0 1rem}
-
-a{text-decoration:none;margin:2rem;padding:0 2rem;display:inline-flex;border-radius:1.4rem;color:#FFF;background:#000;font-size:8rem;align-items:center;filter:grayscale(1)}
-a>div{font-size:4.5rem;text-align:left;margin:0 1rem}
-.bubble{margin-bottom:8rem}
-.bubble.left{margin-right:auto;margin-left: 10rem;}
-.bubble.right{margin-left:auto}
-
-#gCancelDiv{transition:font-size .5s ease-in;border-radius:.5em;border:.3em solid red;display:inline-block;font-size:16rem;color:red;padding:.3em;position:absolute;z-index:4;bottom:999rem;rotate:-30deg}
-.winState2 #gCancelDiv,.loseState2 #gCancelDiv{left:52rem;font-size:6rem;bottom:110rem}
-.loseState2 #gCancelDiv{left:4rem}
-
-#gRivalDiv{transition:all 1s ease;position:absolute;bottom:999rem;right:3rem;font-size:10rem}
-.winState #gRivalDiv{right:20rem}
-.winState #gRivalIconDiv{filter:grayscale(1)}
-
-#gYouDiv{transition:all 1s ease;position:absolute;left:1rem;font-size:10rem;text-align:left}
-.loseState #gYouDiv{left:20rem}
-.loseState svg{fill:#666}
-
-#gOverlayDiv{position:absolute;inset:0;bottom:100%;background:#0008;z-index:9999}
-.discardState #gOverlayDiv{bottom:70.6rem}
-#gHandPickDiv{animation:notice 1s infinite;z-index:2222;position:absolute;bottom:-9rem;left:50%;transform:translateX(-50%);font-size:3rem;background:#ABF;padding:0.1rem 2rem;border-radius:2rem}
-.discardState #gHandPickDiv{bottom:1rem}
-#gTrashViewDiv{border-radius:4rem;z-index:2000;position:absolute;top:60%;left:2rem;right:2rem;bottom:41%;box-shadow:0 0 1rem #000;background:#555;color:#FFF;transition:all .3s ease;overflow:hidden;opacity:0}
-.trashState #gTrashViewDiv{opacity:1;top:2rem;bottom:2rem}
-#gFanAddDiv{transition:all .6s ease-in;position:absolute;z-index:2;left:2rem;font-size:5rem;left:3rem}
-
-.bubbleArrow, .bubble>div{position:relative;background:#FFF;box-shadow:0 .2rem .6rem #999;transition:all 1s ease}
-.bubble>div{border-radius:2rem;margin-top:3rem;text-align:left;font-size:4.5rem;padding:2rem 3rem;top:0}
-.right{margin-right:13rem}
-.left{margin-left:13rem}
-.bubble>div.posted {background:#9E9;top:-1rem}
-.bubbleArrow{top:.5rem;height:5rem;width:5rem;transform:scaleY(.5) rotate(45deg)}
-.right .bubbleArrow{right:4rem}
-.left .bubbleArrow{left:1.5rem}
-
-.postingSlotEmpty{width:9rem;transition:all .4s ease;background:#EEE;border-bottom:1rem solid #DDD;height:100%;margin-right:1rem}
-.posted .postingSlotEmpty{display:none}
-.posted .bubbleArrow{background:#9E9}
-.handBlank{background-color:#CCC;border-radius:.05em;background-size:cover;width:1em;height:1.43em;position:absolute;z-index:3}
-.emoji{font-family:segoe ui emoji}
-#gGoldDiv,#gDayDiv,#gHpDiv{background:#EEC;color:#222;border-radius:9em;border:1px solid #888;font-size:5rem;width:18rem;height:8rem;padding:1rem 0 0 2rem}
-
-@keyframes load {
-	0%, 100% {opacity:1}
-	60% {opacity:.0}
-}
-@keyframes notice {
-	0%, 100% {filter:hue-rotate(0)}
-	60% {filter:hue-rotate(260deg)}
-}
-
-.blink{animation:blink .3s infinite}
-@keyframes blink {
-	0%, 100% {opacity:1}
-	60% {opacity:0}
-}
-
-.glow{animation:glow .8s infinite}
-@keyframes glow {
-	0%, 100% {box-shadow:0px 0px .5rem pink}
-	60% {box-shadow:0px 0px 3rem pink}
-}
-
-.votedDown{animation:votedDown .3s forwards}
-@keyframes votedDown {
-	0%, 100% {transform:translateY(0)}
-	60% {transform:translateY(1rem);filter:hue-rotate(-50deg);color:#E60}
-}
-.votedUp{animation:votedUp .3s forwards}
-@keyframes votedUp {
-	0%, 100% {transform:translateY(0)}
-	60% {transform:translateY(-1rem);filter:hue-rotate(99deg) brightness(1.3);color:#E00}
-}
-
-.shake{animation:shake .3s forwards}
-@keyframes shake {
-	0%,100% {transform:translateX(0)}
-	30% {transform:translateX(-1em)}
-	70% {transform:translateX(1em)}
-}
-
-.phoneButton{position:relative;width:0;left:-22px;top:-20%}
-.phoneButton div{width:12px;height:77px;border:4px outset #AAA;border-radius:4px}
-`
-	
-	var styleSheet = gDivMake("style")
-	styleSheet.textContent = styles
-	d.head.appendChild(styleSheet)
 	gDelay(gOnLoad, 1)
 }
 
@@ -1854,10 +1650,10 @@ var gOnLoad = _ => {
 		if(e.changedTouches) {
 			e = e.changedTouches[0]
 		}
-		//var bounds = gGameDiv.getBoundingClientRect()
-		//gMousePan = gClamp((e.clientX-bounds.x)/bounds.width,0,1)
-		//gMouseX = e.clientX-bounds.x
-		//gMouseY = e.clientY-bounds.y
+		var bounds = gGameDiv.getBoundingClientRect()
+		gMousePan = gClamp((e.clientX-bounds.x)/bounds.width,0,1)
+		gMouseX = e.clientX-bounds.x
+		gMouseY = e.clientY-bounds.y
 		
 		gDivShow(gCardInfoDiv)
 		
@@ -1995,7 +1791,6 @@ var gSoundsMake = _ => {
 }
 */
 
-//var gAudioContext = new AudioContext()
 var gAudioContext = new (w.AudioContext || w.webkitAudioContext)
 var gSoundMake = (func) => {
 	var buffer = gAudioContext.createBuffer(1, 96e3, 48e3)
@@ -2010,7 +1805,6 @@ var gSin = (i,d) => Math.sin(d ? i/d/100 : i)
 
 var gClamp = (v, lo, hi) => Math.min(hi, Math.max(v, lo))
 
-/*
 var gSoundPlay = (buffer, pan) => {
 	if(!gMuted) {
 		var source = gAudioContext.createBufferSource()
@@ -2053,17 +1847,6 @@ var gSoundPlay = (buffer, pan) => {
 		}
 	}
 }
-*/
-
-var gSoundPlay = buffer => {
-	if(!gMuted) {
-		var source = gAudioContext.createBufferSource()
-		source.buffer = buffer
-		source.connect(gAudioContext.destination)
-		source.start()
-	}
-}
-
 
 var gClickSound = gSoundMake(i => gSin(i/10) * Math.exp(-i/100) * (i/100 % 6 < 3 ? 1 : .2))
 
@@ -2161,6 +1944,28 @@ var gExport = _ => {
 }
 var gExport2 = _ => {
 	return JSON.stringify(gRivalKinds.map(kind=>({icon:kind.icon, name:kind.name, post:kind.post, fans:kind.fans, deck:kind.deck.join()})))
+}
+
+var gVibrate = _ => {
+	if(gVibrateEnabled) {
+		gNativeSend('vibrate')
+	} else {
+		gDivClassSet(d.documentElement,'shake', 4)
+		gSoundPlay(gVibrateSound)
+	}
+}
+
+var gNativeSend = (text) => {
+	if(gPlatform == 'ios') {
+		console.log("gNativeSend()", text)
+		if(window.webkit) {
+			window.webkit.messageHandlers.ads.postMessage(text)
+		}
+	} else if(gPlatform == 'android') {
+		console.log(text)
+	} else if(window.CrazyGames) {
+		console.log("gNativeSend()", text)
+	}
 }
 
 /*
