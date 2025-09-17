@@ -1731,22 +1731,64 @@ var gOnLoad = _ => {
 		gSoundPlay(gClickSound)
 		gHelpShowing = !gHelpShowing
 		gDivShow(gHelpDiv, gHelpShowing)
-		
-		var html = ''
-		for(var kind of gCardKinds) {
-			var emoji = kind.emoji.repeat(kind.cost)
-			var text = kind.seen ? kind.text : `<i>not found</i>`
-			var rowStyle = gTextIf(!gYou.deck.find(card=>card.kind==kind), ` style='filter:grayscale(1);color:#888'`)
-			html += `
-				<tr${rowStyle}>
-					<td style='letter-spacing:-2rem;padding-right:2rem;white-space:nowrap' class=emoji>${emoji} </td>
-					<td align=left>${kind.name}</td>
-					<td align=left>${text}</td>
-					<td>${gCardTypeIcons[kind.type]}</td>
-				</tr>
+
+		if(gHelpShowing) {
+			var helpHtml = gPlatform == 'web' ? `
+				<div style='margin-bottom:4rem'>
+					<a target='_blank' href='https://play.google.com/store/apps/details?id=com.curtastic.cancelelon'>
+						▶
+						<div>
+							<div style='font-size:2rem'>GET IT ON</div>Google Play
+						</div>
+					</a>
+					<a target='_blank' href='https://curtastic.com/c'>
+						🍎
+						<div>
+							<div style='font-size:2rem'>Download on the</div>App Store
+						</div>
+					</a>
+				</div>
+			` : ``
+			helpHtml += `
+				<div style='font-size:7rem'>Tips</div>
+				<div style='font-size:4rem;text-align:left'>
+					You need to downvote your enemy's post as hard as possible so they lose all their fans and get cancelled. If your post is negative, you will lose that many fans. It's hard to gain fans so first make sure your post is positive.
+					When your post is already positive, it doesn't help to get higher votes, except that the highest voted post gets +1 fan.
+				</div>
+				<div style='font-size:7rem;margin-top:5rem'>Icon Info</div>
+				<div style='font-size:4rem;text-align:left'>
+					👤 FANS: The amount of followers u have. If u run out, ur canceled.<br>
+					💬 SPACE: +1 increases the max amount of emojis ur allowed to put in a post.<br>
+					😎 COOL: Adds extra upvotes to ur post every time u use a CUTE emoji. Cool stays with u for the rest of the battle.<br>
+					🗣 SHOUT: Adds extra downvotes to ur enemy's post every time u use a HATE emoji. Shout stays with u for the rest of the battle.
+				</div>
+				<div style='font-size:7rem;margin-top:5rem'>Emoji Types</div>
+				<div style='font-size:4rem;text-align:left'>
+					😊 CUTE: Upvotes ur post.<br>
+					💩 HATE: Downvotes ur enemy's post.<br>
+					💡 SKILL: Draws u more emojis or makes more space in ur post.<br>
+					🎁 ITEM: Adds an effect that stays with u the rest of the battle. The item card can't be used again this battle.
+				</div>
+			`
+			var html = ''
+			for(var kind of gCardKinds) {
+				var emoji = kind.emoji.repeat(kind.cost)
+				var text = kind.seen ? kind.text : `<i>not found</i>`
+				var rowStyle = gTextIf(!gYou.deck.find(card=>card.kind==kind), ` style='filter:grayscale(1);color:#888'`)
+				html += `
+					<tr${rowStyle}>
+						<td style='letter-spacing:-2rem;padding-right:2rem;white-space:nowrap' class=emoji>${emoji} </td>
+						<td align=left>${kind.name}</td>
+						<td align=left>${text}</td>
+						<td>${gCardTypeIcons[kind.type]}</td>
+					</tr>
+				`
+			}
+			gHelpCardsDiv.innerHTML = helpHtml+`
+				<div style='font-size:7rem;margin-top:5rem'>Emojidex</div>
+				<table border=1>${html}</table>
 			`
 		}
-		gHelpCardsDiv.innerHTML = `<table border=1>${html}</table>`
 	}
 	
 	
@@ -1967,6 +2009,26 @@ var gNativeSend = (text) => {
 		console.log("gNativeSend()", text)
 	}
 }
+
+var gLogDb = (kind,message) => {
+	gAjax('log.php?refer='+encodeURIComponent(document.referrer)+'&kind='+kind+'&message='+encodeURIComponent(message||'')+'&page=cancelcat')
+}
+
+var gVersion=1
+var gAjax = (url, f) => {
+	var protocol = 'https:'
+	var site = 'curtastic.'
+	if(window.location.host == 'localhost')
+		url=['http:','','localhost',url].join('/')
+	else
+		url = [protocol,'',site+'com',url].join('/')
+	url += '&v='+gVersion
+	fetch(url).then(r=>r.text()).then(f)
+}
+setTimeout(function() {
+	var path = window.location.pathname
+	gAjax('log.php?kind=view&page=cancelcat&path='+encodeURIComponent(path)+'&referrer='+encodeURIComponent(document.referrer))
+},99)
 
 /*
 gSoundMake(i => {
