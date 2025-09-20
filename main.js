@@ -86,13 +86,14 @@ var gAppVersion=1,
 	gHandMax=8,
 	gEnergyStart=3,
 	gSale=' emojis on sale! Lowest price guaranteed. Today only.',
-	gRivalInfos=`Boomer|25|👴|🏡1🏈2🔫1✝2🔊1🗽1🤬3🍔3💤1🏡1💤3|I bought my first house for 7 raspberries. The kids today are just lazy. Time for my nap.
-Guru|25|🧘|🧵3🙏3✌1🤐2🥗2🤫2🛕1🤦2|The energy crystals harness the moon energy. That is why you are lucky.
+	gRivalInfos=`Boomer|25|👴|🏡1🏈2🔫1✝2🔊1🗽1🤬3🍔🍔3💤1🏡1💤3|I bought my first house for 7 raspberries. The kids today are just lazy. Time for my nap.
+Guru|25|🧘|🚨1🧵3🙏3✌1🤐2🥗2🤫2🛕1🤦2|The energy crystals harness the moon energy. That is why you are lucky.
 Model|25|💃|😈1👒1💋1🍑1🖕1🔞1👀1🍈1👅1🎊1👙1|Do you like the view? Pics in bio!
 Hipster|25|🧔|👖1🤐1🦉2🐕1🍆2💪2🍺2🥱2✌1|I liked craft beer before it was cool.
 Karen|25|👩|🤮2🤬2👒1🍸2🥗2⚠1|Corner Cafe's avocados aren't organic! That should be illegal. And why do cafes keep shutting down?
 Creep|25|👨‍🦲|🤮1🍆3💦4🚽2👀2👅2😈3|hi mama cum to my place
-Regard|25|🧒|🚀2🦍2🐻3🐂1📈2🚽1🍔1🎰2|To the moon! 📈🚀
+GameDev|25|👨|🧠1🚨1😈2🚽1💩2😭2📡1🔫1💯1🎲2|I quit my job to make my dream game! But 0% of my wishlist bought it. Wishlist now! #
+Regard|25|🧒|⚠1🚨2🚀2🦍🦍2🐻3🐂1📈2🚽1🍔🍔1🎰2|To the moon! 📈🚀
 ${(gPlatform=='ios'?'RichGuy':'Elon')}|225|👱|🍆1💦1💯2🚀2😂2🚗2🤰1📡1|Go Donald Trump! Run the country through executive order!
 GotJunk||🛠||<b>Too Much Junk?</b> Expert junk emoji removal service. Any emoji, one low price!
 FanFast||✨||<b>Promote Your Profile!</b> Guaranteed new real fans. 1 for $1. Today only.
@@ -110,6 +111,7 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"🦍2Apes|draw 2\n🗣+6", cost:2, draw:2, shout:6},
 		{d:"😭0Crying|👍10 if u have no cool", attack:_=>gGuyNow.cool < 1 ? 10:0},
 		{d:"😘2Blowing a Kiss|increase all 👍👎 by 50%", block:_=>-gGuyNow.other.votes>>1, attack:_=>gGuyNow.votes>>1},
+		{d:"🎲2Game Die|👍1-6 💬0-2", energy:_=>gRandomInt(0,2), attack:_=>gRandomInt(1,6)},
 		{d:"🗽0Statue of Liberty|👍10 if u haven't posted any hate", attack:_=>gGuyNow.posting.find(card=>card.block)?0:10},
 		{d:"🍵0Tea|👍5\n😎+2", attack:5, cool:2},
 		{d:"😂1Tears of joy|👎 for each 👍 ur post has", block:_=>Math.max(0, gGuyNow.votes)},
@@ -137,13 +139,14 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"🍆1Eggplant|👎9", block:9},
 		{d:"👙0Bikini|👍22\nenemy gets 🗣+3",attack:22, onUse:_=>gGuyShoutAdd(gGuyNow.other,3)},
 		{d:"🚨2Siren|draw 2\n🗣+1", shout:1, draw:2},
+		{d:"🔫1Pistol|👎20 if ur previous emoji did 👍7+", block:_=>gPostingCard0?.attack >= 7 ? 20: 0},
 		{d:"💦1Droplets|👎x2 the amount of 👎 ur previous emoji did", block:_=>gPostingCard0 ? Math.max(0,gPostingCard0.block*2): 0},
 		{d:"🍑0Peach|👍x2 the amount of 👎 ur previous emoji did", attack:_=>gPostingCard0 ? Math.max(0,gPostingCard0.block*2): 0},
-		{d:"🔫1Pistol|👎x2 the amount of 👍 ur previous emoji did", block:_=>gPostingCard0 ? Math.max(0,gPostingCard0.attack*2): 0},
 		{d:"🔊2Speaker High|next emoji does 2x 👍👎"},
 		{d:"🤡1Clown|👎 half ur enemy's 👍", block:_=>gGuyNow.other.votes>0?gGuyNow.other.votes>>1:0},
 		{d:"🏈0Football|👍7\n👍3 when chosen to discard", attack:7, onDiscard:_=>{gGuyVotesAdd(3);gPostingRender()}},
 		{d:"🚽3Toilet|👎1 every time u use an emoji"},
+		{d:"🦝0Trash Panda|👍1\nget a trashed emoji", attack:1},
 		{d:"🤢1Nausea|👎for each emoji in ur trash", block:_=>gGuyNow.trash.length},
 		{d:"🤐1Zippermouth|👎12 send ur post now", block:12, ender:1},
 		{d:"🤬1Face With Symbols|👎4\n🗣+2", block:4, shout:2},
@@ -153,7 +156,7 @@ ThinkNerd||🎁||<b>Sale!</b> ITEM${gSale}`.split(`
 		{d:"🏡3House With Garden|💬+1 on each post"},
 		{d:"💤1Zzz|👎3\nDraw 3 if u lose fans", block:3},
 		{d:"🧠3Brain|draw 1 extra each time ur turn starts"},
-		{d:"😈0Smiling Devil|👍5\n👎5", attack:5, block:5},
+		{d:"😈1Smiling Devil|👍3\n👎6", attack:3, block:6},
 		{d:"🥱1Yawn|👎3 💬+1", block:3, energy:1},
 		{d:"🍺0Beer|👍7\n🗣+1\ndiscard 1", attack:7, shout:1, discard:1},
 		{d:"💪2Flex|💬+1\n😎+1", energy:1, cool:1},
@@ -180,7 +183,7 @@ for(var kind of gCardKinds) {
 	kind.name = s.substr(3)
 	kind.i = i++
 	if(!kind.cost)kind.cost=1
-	gCardKindsByEmoji[kind.emoji] = kind
+	gCardKindsByEmoji[kind.emoji.repeat(kind.cost)] = kind
 }
 
 var index=0
@@ -217,6 +220,10 @@ else if(navigator.platform.indexOf('Linux') >= 0)
 	gDevice = 'android'
 */
 
+var gDayOfWeekGet = _ => {
+	return (gDay+4)%7
+}
+
 var gDivBottomSet = (div, y, x) => {
 	if(div.div)div=div.div
 	div.style.bottom = (y===u?333:y)+'rem'
@@ -250,30 +257,6 @@ var gStateSet = state => {
 		gHandPickDiv.innerHTML = "Choose "+gDiscardNeed+" to discard:"
 	}
 	
-	if(gState == gStateTrashView) {
-		gTrashRender()
-	}
-	
-	if(state == gStateTrashView) {
-		var margin = 6
-		var x = margin
-		var y = 8
-		var spacing = 1
-		var cardSizeX = gCardRem+spacing
-		var i=0
-		for(var card of gYou.trash) {
-			card.div.style.fontSize = gCardRem+'rem'
-			gDivBottomSet(card, y, x)
-			card.div.style.zIndex = 2001+i
-			x+=cardSizeX+spacing
-			if(x>100-margin-cardSizeX) {
-				x = margin
-				y += cardSizeX*gCardTall + spacing
-			}
-			i++
-		}
-	}
-	
 	gDivBottomSet(gDeckDiv, !gBattleIn || gYou.deck[0] ? u:72)
 	
 	if(state == gStateIntro) {
@@ -281,7 +264,7 @@ var gStateSet = state => {
 		gBubbleMake(0, gLoadingDotsHtmlGet())
 		gBubbleMake(1, gLoadingDotsHtmlGet())
 		gBubbleGet(1).style.opacity = 0
-		gRival = gGuyMake(gRivalKinds[7])
+		gRival = gGuyMake(gRivalKinds[8])
 		gDelay(_=>{
 			gBubbleTextSet(0, "Cats rule the<br />internet!")
 			gDelay(_=>{
@@ -392,12 +375,23 @@ var gStateSet = state => {
 					var rivalKind = gRivalKinds[rivalI==specialI ? gRandomInt(8,13) : Math.min(6, gRandomInt(1,3)*rivalI+(gDay-1)/2|0)]
 					rivalKind.fans += rivalKind.fans && gDay*gRandomInt(2,5)
 					if(gDay>12 && !rivalI)rivalKind = gRivalKinds[7]
-					gBubbleMake(1, rivalKind.post, u, rivalKind)
+					var postText = rivalKind.post
+					if(rivalKind.icon == '👨') {
+						var dayOfWeek = gDayOfWeekGet()
+						if(dayOfWeek == 0)postText += "PitchYaGame"
+						if(dayOfWeek == 1)postText += "PortfolioDay"
+						if(dayOfWeek == 2)postText += "TrailerTuesday"
+						if(dayOfWeek == 3)postText += "WishlistWednesday"
+						if(dayOfWeek == 4)postText += "ThrowbackThursday"
+						if(dayOfWeek == 5)postText += "FollowFriday"
+						if(dayOfWeek == 6)postText += "ScreenshotSaturday"
+					}
+					gBubbleMake(1, postText, u, rivalKind)
 					if(rivalI==specialI) {
 						gRival = gGuyMake(rivalKind)
-						if(rivalKind.index > 9) {
+						if(rivalKind.index > 10) {
 							var total = 4
-							var kinds = gCardKinds.filter(kind=>kind.type==rivalKind.index-10)
+							var kinds = gCardKinds.filter(kind=>kind.type==rivalKind.index-11)
 							gShuffleArray(kinds)
 							for(var i=0; i<total; i++) {
 								card = gCardMake(kinds[i])
@@ -422,6 +416,8 @@ var gStateSet = state => {
 		})
 		
 	}
+	
+	gTrashRender()
 }
 
 var gGuyCoolAdd = (guy, total) => {
@@ -617,7 +613,7 @@ var gBattleStart = rivalKind => {
 	
 	
 	gDeckShuffle(gYou)
-	if(rivalKind.index)gDeckShuffle(gRival)
+	if(rivalKind.icon != '👴')gDeckShuffle(gRival)
 	
 	gHandRender()
 	
@@ -1019,8 +1015,13 @@ var gItemsRender = guy =>{
 }
 
 var gTrashToggle = _=> {
-	if(gTrashPick<1)
-		gStateSet(gState == gStateTrashView ? gStateOld : gStateTrashView)
+	if(gState == gStateTrashView) {
+		if(gTrashPick<1) {
+			gStateSet(gStateOld)
+		}
+	} else {
+		gStateSet(gStateTrashView)
+	}
 }
 
 var gArrayRemove = (a,v)=>{
@@ -1094,8 +1095,7 @@ var gCardUseTry = card=>{
 			if(gTrashPick) {
 				gTrashPick--
 				if(gTrashPick<1) {
-					var card2 = gYou.posting[gYou.posting.length-1]
-					if(card2.kind.emoji=='🦝') {
+					if(gPostingCard0?.kind.emoji=='🦝') {
 						gArrayRemove(gYou.trash, card)
 						gCardHandAdd(card)
 						gHandRender()
@@ -1104,7 +1104,7 @@ var gCardUseTry = card=>{
 				}
 			}
 		} else {
-			gStateSet(gStateTrashView)
+			gTrashToggle()
 		}
 		gSoundPlay(gClickSound)
 		return
@@ -1251,13 +1251,13 @@ var gCardUsePostAdd = card => {
 
 	gDraw(card.kind.draw)
 
-	/*
 	if(card.kind.emoji=='🦝') {
 		if(gGuyNow.trash[0]) {
 			gTrashPick = 1
-			gStateSet(gStateTrashView)
+			gTrashToggle()
 		}
 	}
+	/*
 	if(card.kind.emoji=='🦅') {
 		while(1) {
 			var kind = gCardKinds[gRandomInt(0,gCardKinds.length-1)]
@@ -1313,15 +1313,34 @@ var gDivClassSet = (div, className, time100) => {
 }
 
 var gTrashRender = _=> {
-	var cardSizeX = gCardRem*gSizeX/100
-	var i=0
-	for(var card of gYou.trash) {
-		card.div.style.zIndex = 1000+i
-		card.div.style.fontSize = gCardRem/3+'rem'
-		gDivBottomSet(card, gHandSizeY+3+i*.2, 24)
-		i++
+	if(gState != gStateTrashView) {
+		var cardSizeX = gCardRem*gSizeX/100
+		var i=0
+		for(var card of gYou.trash) {
+			card.div.style.zIndex = 1000+i
+			card.div.style.fontSize = gCardRem/3+'rem'
+			gDivBottomSet(card, gHandSizeY+3+i*.2, 24)
+			i++
+		}
+	} else {
+		var margin = 6
+		var x = margin
+		var y = 8
+		var spacing = 1
+		var cardSizeX = gCardRem+spacing
+		var i=0
+		for(var card of gYou.trash) {
+			card.div.style.fontSize = gCardRem+'rem'
+			gDivBottomSet(card, y, x)
+			card.div.style.zIndex = 2001+i
+			x+=cardSizeX+spacing
+			if(x>100-margin-cardSizeX) {
+				x = margin
+				y += cardSizeX*gCardTall + spacing
+			}
+			i++
+		}
 	}
-	
 	gDivBottomSet(gTrashDiv, gBattleIn ? gHandSizeY+1 : u)
 }
 
