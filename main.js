@@ -88,13 +88,13 @@ var gAppVersion=1,
 	gSale=' emojis on sale! Lowest price guaranteed. Today only.',
 	gRivalInfos=`Boomer|25|👴|🏡1🏈2🔫1✝2🔊1🗽1🤬3🍔🍔3💤1🏡1💤3|I bought my first house for 7 raspberries. The kids today are just lazy. Time for my nap.
 Guru|25|🧘|🚨1🧵3🙏3✌1🤐2🥗2🤫2🛕1🤦2|The energy crystals harness the moon energy. That is why you are lucky.
-Model|25|💃|😈1👒1💋1🍑1🖕1🔞1👀1🍈1👅1🎊1👙1|Do you like the view? Pics in bio!
+Model|25|💃|😈1👒1💋1🍑1🖕1🔞1👀1🍈🍈1👅1🎊1👙1|Do you like the view? Pics in bio!
 Hipster|25|🧔|👖1🤐1🦉2🐕1🍆2💪2🍺2🥱2✌1|I liked craft beer before it was cool.
 Karen|25|👩|🤮2🤬2👒1🍸2🥗2⚠1|Corner Cafe's avocados aren't organic! That should be illegal. And why do cafes keep shutting down?
 Creep|25|👨‍🦲|🤮1🍆3💦4🚽2👀2👅2😈3|hi mama cum to my place
 GameDev|25|👨|🧠1🚨1😈2🚽1💩2😭2📡1🔫1💯1🎲2|I quit my job to make my dream game! But 0% of my wishlist bought it. Wishlist now! #
 Regard|25|🧒|⚠1🚨2🚀2🦍🦍2🐻3🐂1📈2🚽1🍔🍔1🎰2|To the moon! 📈🚀
-${(gPlatform=='ios'?'RichGuy':'Elon')}|225|👱|🍆1💦1💯2🚀2😂2🚗2🤰1📡1|Go Donald Trump! Run the country through executive order!
+${(gPlatform=='ios'?'RichGuy':'Elon')}|226|👱|🍆1💦1💯2🚀2😂2🚗2🤰1📡1|Go Donald Trump! Run the country through executive order!
 GotJunk||🛠||<b>Too Much Junk?</b> Expert junk emoji removal service. Any emoji, one low price!
 FanFast||✨||<b>Promote Your Profile!</b> Guaranteed new real fans. 1 for $1. Today only.
 Cutest||😻||<b>Sale!</b> ♥CUTE♥${gSale}
@@ -2000,11 +2000,11 @@ gCardPlaySounds[1] = gSoundMake(i => {
 	return gSin(i*.01*gSin(.003*i+gSin(i,7))+gSin(i,1))*q*q
 })
 
-var gExport = _ => {
-	return JSON.stringify(gCardKinds.map(kind=>({emoji:kind.emoji, name:kind.name, text:kind.text, cost:kind.cost, type:kind.type})))
+var gExportCardKinds = _ => {
+	console.log(JSON.stringify(gCardKinds.map(kind=>({emoji:kind.emoji, name:kind.name, text:kind.text, cost:kind.cost, type:kind.type}))).split("\\n").join("\\\\\\\\n").split("'").join("\\'"))
 }
-var gExport2 = _ => {
-	return JSON.stringify(gRivalKinds.map(kind=>({icon:kind.icon, name:kind.name, post:kind.post, fans:kind.fans, deck:kind.deck.join()})))
+var gExportGuyKinds = _ => {
+	console.log(JSON.stringify(gRivalKinds.map(kind=>({icon:kind.icon, name:kind.name, post:kind.post, fans:kind.fans, deck:kind.deck.join()}))).split("\\n").join("\\\\\\\\n").split("'").join("\\'"))
 }
 
 var gVibrate = _ => {
