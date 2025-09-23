@@ -487,7 +487,7 @@ var gGuyFansSet = (guy,fans) => {
 								}
 								gDivBottomSet(gMessageDiv, 72)
 								gMessageDiv.innerHTML = `<div style='margin-bottom:2rem'>Your fans donated $6 to you!</div>You can take an emoji:`
-								gButtonShow(0, '❌ No Thanks', 22, gPrizeDone)
+								gButtonShow(0, '✖ No Thanks', 22, gPrizeDone)
 								
 								gGoldAdd(6)
 							}
@@ -872,6 +872,8 @@ var gCardFlipUp = card => {
 var gCardFlipDown = card => {
 	//console.log("gCardFlipDown()", card.kind.name)
 	card.div.classList.remove('faceUp')
+	card.div.classList.remove('cantUse')
+	card.div.classList.remove('cantClick')
 	card.div.style.fontSize = gCardRem*.4+'rem'
 }
 
@@ -1292,6 +1294,7 @@ var gCardTrashGo = card => {
 	card.div.style.opacity = 1
 	card.div.style.pointerEvents = 'all'
 	card.div.classList.remove('cantUse')
+	card.div.classList.remove('cantClick')
 
 	gPush(card.guy.trash, card, 1)
 }
@@ -1371,8 +1374,10 @@ var gHandRender = ()=>{
 		
 		if(gCardUseCan(card)) {
 			card.div.classList.remove('cantUse')
+			card.div.classList.remove('cantClick')
 		} else {
 			card.div.classList.add('cantUse')
+			card.div.classList.add('cantClick')
 		}
 		
 		card.div.querySelector('.cardText').innerHTML = gCardTextHtmlGet(card)
@@ -1430,6 +1435,9 @@ var gDeckShow = _=>{
 		x+=.2
 		y+=1
 		card.div.querySelector('.cardText').innerHTML = gCardTextHtmlGet(card)
+		if(gState!=gStateCardRemove) {
+			card.div.classList.add('cantClick')
+		}
 		gDivBottomSet(card, y, x)
 		card.div.style.fontSize = gCardRem/2+'rem'
 		card.div.style.zIndex = z++
